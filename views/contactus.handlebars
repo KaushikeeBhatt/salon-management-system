@@ -1,0 +1,319 @@
+<div class="container py-5">
+    <div class="row">
+        <div class="col-12 text-center mb-5">
+            <h1 class="section-title">Get In Touch</h1>
+            <p class="lead">We'd love to hear from you. Send us a message and we'll respond as soon as possible.</p>
+        </div>
+    </div>
+    
+    <!-- Success/Error Messages -->
+    {{#if success}}
+    <div class="row">
+        <div class="col-12">
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="fas fa-check-circle me-2"></i>{{success}}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+    {{/if}}
+    
+    {{#if error}}
+    <div class="row">
+        <div class="col-12">
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="fas fa-exclamation-triangle me-2"></i>{{error}}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+    {{/if}}
+    
+    <!-- Contact Information Cards -->
+    <div class="row mb-5">
+        <div class="col-lg-4 mb-4">
+            <div class="contact-info-card text-center">
+                <div class="contact-icon">
+                    <i class="fas fa-map-marker-alt fa-2x"></i>
+                </div>
+                <h4>Visit Us</h4>
+                <p class="mb-0">
+                    {{contactus.Address.address1}}<br>
+                    {{#if contactus.Address.address2}}{{contactus.Address.address2}}<br>{{/if}}
+                    {{contactus.Address.city}}, {{contactus.Address.state}} {{contactus.Address.zip}}
+                </p>
+            </div>
+        </div>
+        <div class="col-lg-4 mb-4">
+            <div class="contact-info-card text-center">
+                <div class="contact-icon">
+                    <i class="fas fa-phone fa-2x"></i>
+                </div>
+                <h4>Call Us</h4>
+                <p class="mb-0">
+                    <a href="tel:{{contactus.Phone.mobile}}" class="contact-link">
+                        {{contactus.Phone.mobile}}
+                    </a>
+                </p>
+            </div>
+        </div>
+        <div class="col-lg-4 mb-4">
+            <div class="contact-info-card text-center">
+                <div class="contact-icon">
+                    <i class="fas fa-envelope fa-2x"></i>
+                </div>
+                <h4>Email Us</h4>
+                <p class="mb-0">
+                    <a href="mailto:{{contactus.Email.email}}?subject=Inquiry from Blvd6 Salon" class="contact-link">
+                        {{contactus.Email.email}}
+                    </a>
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Contact Form and Map -->
+    <div class="row">
+        <div class="col-lg-6 mb-4">
+            <div class="contact-form-card">
+                <h3 class="mb-4">
+                    <i class="fas fa-paper-plane me-2"></i>Send us a Message
+                </h3>
+                
+                <form action="/leads" method="POST" id="contactForm" class="needs-validation" novalidate>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="firstNameContact" class="form-label">First Name *</label>
+                            <input type="text" class="form-control" id="firstNameContact" name="firstNameContact" autocomplete="given-name" required>
+                            <div class="invalid-feedback">Please provide your first name.</div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="lastNameContact" class="form-label">Last Name *</label>
+                            <input type="text" class="form-control" id="lastNameContact" name="lastNameContact" autocomplete="family-name" required>
+                            <div class="invalid-feedback">Please provide your last name.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="emailContact" class="form-label">Email Address *</label>
+                            <input type="email" class="form-control" id="emailContact" name="emailContact" autocomplete="email" required>
+                            <div class="invalid-feedback">Please provide a valid email address.</div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="phoneContact" class="form-label">Phone Number</label>
+                            <input type="tel" class="form-control" id="phoneContact" name="phoneContact" autocomplete="tel">
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="reasonContact" class="form-label">How can we help you? *</label>
+                        <select id="reasonContact" name="reasonContact" class="form-select" autocomplete="off" required>
+                            <option value="">Choose an option...</option>
+                            <option value="General Inquiry">General Inquiry</option>
+                            <option value="Appointment Booking">Appointment Booking</option>
+                            <option value="Special Occasion Consultation">Special Occasion Consultation</option>
+                            <option value="Product Information">Product Information</option>
+                            <option value="Feedback">Feedback</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <div class="invalid-feedback">Please select a reason for contact.</div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="addlContact" class="form-label">Message *</label>
+                        <textarea id="addlContact" name="addlContact" class="form-control" rows="5" 
+                                  placeholder="Tell us more about how we can help you..." autocomplete="off" required></textarea>
+                        <div class="invalid-feedback">Please provide a message.</div>
+                    </div>
+                    
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-paper-plane me-2"></i>Send Message
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <div class="col-lg-6">
+            <div class="map-card">
+                <h3 class="mb-4">
+                    <i class="fas fa-map-marked-alt me-2"></i>Find Us
+                </h3>
+                <div class="map-container">
+                    <div id="map"></div>
+                </div>
+                
+                <!-- Business Hours -->
+                <div class="business-hours mt-4">
+                    <h5><i class="fas fa-clock me-2"></i>Business Hours</h5>
+                    <div class="hours-list">
+                        <div class="d-flex justify-content-between">
+                            <span>Monday - Friday</span>
+                            <span>9:00 AM - 7:00 PM</span>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span>Saturday</span>
+                            <span>9:00 AM - 6:00 PM</span>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span>Sunday</span>
+                            <span>10:00 AM - 5:00 PM</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Quick Actions -->
+                <div class="quick-actions mt-4">
+                    <h5><i class="fas fa-bolt me-2"></i>Quick Actions</h5>
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#appointmentModal">
+                            <i class="fas fa-calendar-alt me-2"></i>Book Appointment
+                        </button>
+                        <a href="/appointment-lookup" class="btn btn-outline-secondary">
+                            <i class="fas fa-search me-2"></i>Check Appointment Status
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- FAQ Section -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="faq-section">
+                <h3 class="text-center mb-4">
+                    <i class="fas fa-question-circle me-2"></i>Frequently Asked Questions
+                </h3>
+                <div class="row">
+                    <div class="col-lg-6 mb-3">
+                        <div class="faq-item">
+                            <h6><i class="fas fa-chevron-right me-2 text-primary"></i>How do I book an appointment?</h6>
+                            <p class="text-muted">You can book online using our booking system, call us directly, or visit our salon in person.</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 mb-3">
+                        <div class="faq-item">
+                            <h6><i class="fas fa-chevron-right me-2 text-primary"></i>What should I bring to my appointment?</h6>
+                            <p class="text-muted">Just bring yourself! We provide all necessary tools and products for your service.</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 mb-3">
+                        <div class="faq-item">
+                            <h6><i class="fas fa-chevron-right me-2 text-primary"></i>Do you offer consultations?</h6>
+                            <p class="text-muted">Yes! We offer free consultations to discuss your hair goals and recommend the best services.</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 mb-3">
+                        <div class="faq-item">
+                            <h6><i class="fas fa-chevron-right me-2 text-primary"></i>What is your cancellation policy?</h6>
+                            <p class="text-muted">Please provide at least 24 hours notice for cancellations to avoid any fees.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+$(document).ready(function() {
+    $("#iContact").addClass("active");
+    $("#admin-ul").hide();
+    $("#public-ul").show();
+    
+    // Form validation and submission
+    const contactForm = document.getElementById('contactForm');
+    if (contactForm) {
+        contactForm.addEventListener('submit', function(event) {
+            if (!contactForm.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            contactForm.classList.add('was-validated');
+        }, false);
+    }
+    
+    // Phone number formatting
+    $('#phoneContact').on('input', function() {
+        let value = this.value.replace(/\D/g, '');
+        let formattedValue = '';
+        
+        if (value.length >= 6) {
+            formattedValue = `(${value.slice(0, 3)}) ${value.slice(3, 6)}-${value.slice(6, 10)}`;
+        } else if (value.length >= 3) {
+            formattedValue = `(${value.slice(0, 3)}) ${value.slice(3)}`;
+        } else {
+            formattedValue = value;
+        }
+        
+        this.value = formattedValue;
+    });
+    
+    // Add scroll animations
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('fade-in');
+            }
+        });
+    }, { threshold: 0.1 });
+    
+    document.querySelectorAll('.contact-info-card, .faq-item').forEach(item => {
+        observer.observe(item);
+    });
+});
+
+function initMap() {
+    const salon = { lat: 34.151417, lng: -118.453617 };
+    
+    const map = new google.maps.Map(document.getElementById('map'), {
+        center: salon,
+        zoom: 15,
+        styles: [
+            {
+                featureType: 'all',
+                elementType: 'geometry.fill',
+                stylers: [{ weight: '2.00' }]
+            },
+            {
+                featureType: 'all',
+                elementType: 'geometry.stroke',
+                stylers: [{ color: '#9c9c9c' }]
+            },
+            {
+                featureType: 'all',
+                elementType: 'labels.text',
+                stylers: [{ visibility: 'on' }]
+            }
+        ]
+    });
+    
+    const marker = new google.maps.Marker({
+        position: salon,
+        map: map,
+        title: 'Blvd6 Salon',
+        animation: google.maps.Animation.DROP
+    });
+    
+    const infoWindow = new google.maps.InfoWindow({
+        content: `
+            <div style="padding: 10px;">
+                <h6 style="margin: 0 0 10px 0; color: #6366f1;">Blvd6 Salon</h6>
+                <p style="margin: 0; font-size: 14px;">Professional Beauty Services</p>
+                <p style="margin: 5px 0 0 0; font-size: 12px; color: #666;">
+                    Click for directions
+                </p>
+            </div>
+        `
+    });
+    
+    marker.addListener('click', () => {
+        infoWindow.open(map, marker);
+    });
+}
+</script>
+
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAjc7C1wVVqG6qUwJTS3d55Nu4xxen1yJ4&callback=initMap"></script>

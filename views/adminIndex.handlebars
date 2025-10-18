@@ -1,0 +1,358 @@
+<div class="container py-5">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="section-title">Admin Dashboard</h1>
+            <p class="lead">Manage your salon operations from this central hub</p>
+        </div>
+    </div>
+    
+    <!-- Quick Stats -->
+    <div class="row mb-5">
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="admin-stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-calendar-check fa-2x"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="totalAppointments">0</h3>
+                    <p>Total Appointments</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="admin-stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-users fa-2x"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="totalCustomers">0</h3>
+                    <p>Total Customers</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="admin-stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-shopping-bag fa-2x"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="totalProducts">0</h3>
+                    <p>Total Products</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="admin-stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-user-tie fa-2x"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="totalStaff">0</h3>
+                    <p>Total Staff</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Management Cards -->
+    <div class="row">
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="admin-management-card">
+                <div class="card-icon">
+                    <i class="fas fa-calendar-alt fa-3x"></i>
+                </div>
+                <div class="card-content">
+                    <h4>Appointments</h4>
+                    <p>Manage customer appointments, view schedules, and update appointment status.</p>
+                    <div class="card-actions">
+                        <a href="/admin/appointments" class="btn btn-primary">
+                            <i class="fas fa-eye me-2"></i>View All
+                        </a>
+                        <a href="/admin/appointments/pending" class="btn btn-outline-warning">
+                            <i class="fas fa-clock me-2"></i>Pending
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="admin-management-card">
+                <div class="card-icon">
+                    <i class="fas fa-store fa-3x"></i>
+                </div>
+                <div class="card-content">
+                    <h4>Salon Settings</h4>
+                    <p>Update salon information, contact details, and business hours.</p>
+                    <div class="card-actions">
+                        <a href="/admin/salon/edit" class="btn btn-primary">
+                            <i class="fas fa-edit me-2"></i>Edit Salon
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="admin-management-card">
+                <div class="card-icon">
+                    <i class="fas fa-shopping-bag fa-3x"></i>
+                </div>
+                <div class="card-content">
+                    <h4>Products</h4>
+                    <p>Manage product inventory, add new products, and update pricing.</p>
+                    <div class="card-actions">
+                        <a href="/admin/products" class="btn btn-success">
+                            <i class="fas fa-boxes me-2"></i>View Products
+                        </a>
+                        <button class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#addProductModal">
+                            <i class="fas fa-plus me-2"></i>Add New
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="admin-management-card">
+                <div class="card-icon">
+                    <i class="fas fa-user-tie fa-3x"></i>
+                </div>
+                <div class="card-content">
+                    <h4>Staff Management</h4>
+                    <p>Manage staff members, their services, and schedules.</p>
+                    <div class="card-actions">
+                        <a href="/admin/staff" class="btn btn-info">
+                            <i class="fas fa-users me-2"></i>View Staff
+                        </a>
+                        <button class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#addStaffModal">
+                            <i class="fas fa-user-plus me-2"></i>Add Staff
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="admin-management-card">
+                <div class="card-icon">
+                    <i class="fas fa-users fa-3x"></i>
+                </div>
+                <div class="card-content">
+                    <h4>Customers</h4>
+                    <p>View customer profiles, appointment history, and contact information.</p>
+                    <div class="card-actions">
+                        <a href="/admin/customers" class="btn btn-danger">
+                            <i class="fas fa-address-book me-2"></i>View Customers
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="admin-management-card">
+                <div class="card-icon">
+                    <i class="fas fa-spa fa-3x"></i>
+                </div>
+                <div class="card-content">
+                    <h4>Services</h4>
+                    <p>Manage service offerings, pricing, and descriptions.</p>
+                    <div class="card-actions">
+                        <a href="/admin/services" class="btn btn-warning">
+                            <i class="fas fa-list me-2"></i>View Services
+                        </a>
+                        <button class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#addServiceModal">
+                            <i class="fas fa-plus me-2"></i>Add Service
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Recent Activity -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="admin-activity-card">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4><i class="fas fa-clock me-2"></i>Recent Activity</h4>
+                    <button class="btn btn-outline-primary btn-sm" onclick="testDatabase()">
+                        <i class="fas fa-database me-2"></i>Test Database
+                    </button>
+                </div>
+                <div class="activity-list" id="recentActivity">
+                    <div class="text-center py-4">
+                        <i class="fas fa-info-circle fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">Recent activity will be displayed here</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+$(document).ready(function() {
+    // Ensure admin navigation is visible
+    $("#admin-ul").removeClass('d-none').show();
+    $("#public-ul").addClass('d-none').hide();
+    
+    // Check authentication and update UI
+    fetch('/auth/user')
+        .then(response => response.json())
+        .then(data => {
+            if (data.isAuthenticated && data.user) {
+                console.log('✅ Admin dashboard loaded for:', data.user.email, 'Role:', data.user.role);
+                // Update UI visibility using global function
+                if (typeof updateUIVisibility === 'function') {
+                    updateUIVisibility(data.user);
+                }
+            } else {
+                console.log('⚠️ User not authenticated, redirecting...');
+                window.location.href = '/auth/google?admin=true';
+            }
+        })
+        .catch(error => {
+            console.error('❌ Error checking auth status:', error);
+        });
+    
+    // Load dashboard statistics
+    loadDashboardStats();
+    loadRecentActivity();
+});
+
+function loadDashboardStats() {
+    // Load appointment count
+    fetch('/admin/api/stats/appointments')
+        .then(response => response.json())
+        .then(data => {
+            $('#totalAppointments').text(data.count || 0);
+        })
+        .catch(() => $('#totalAppointments').text('0'));
+    
+    // Load customer count
+    fetch('/admin/api/stats/customers')
+        .then(response => response.json())
+        .then(data => {
+            $('#totalCustomers').text(data.count || 0);
+        })
+        .catch(() => $('#totalCustomers').text('0'));
+    
+    // Load product count
+    fetch('/admin/api/stats/products')
+        .then(response => response.json())
+        .then(data => {
+            $('#totalProducts').text(data.count || 0);
+        })
+        .catch(() => $('#totalProducts').text('0'));
+    
+    // Load staff count
+    fetch('/admin/api/stats/staff')
+        .then(response => response.json())
+        .then(data => {
+            $('#totalStaff').text(data.count || 0);
+        })
+        .catch(() => $('#totalStaff').text('0'));
+}
+
+function loadRecentActivity() {
+    fetch('/admin/api/recent-activity')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success && data.activities.length > 0) {
+                displayRecentActivity(data.activities);
+            } else {
+                showNoActivity();
+            }
+        })
+        .catch(() => showNoActivity());
+}
+
+function displayRecentActivity(activities) {
+    const activityHtml = activities.map(activity => `
+        <div class="activity-item">
+            <div class="activity-icon">
+                <i class="fas fa-${activity.icon} text-${activity.type}"></i>
+            </div>
+            <div class="activity-content">
+                <p class="activity-text">${activity.message}</p>
+                <small class="activity-time">${formatTime(activity.createdAt)}</small>
+            </div>
+        </div>
+    `).join('');
+    
+    $('#recentActivity').html(activityHtml);
+}
+
+function showNoActivity() {
+    $('#recentActivity').html(`
+        <div class="text-center py-4">
+            <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+            <p class="text-muted">No recent activity</p>
+        </div>
+    `);
+}
+
+function formatTime(timestamp) {
+    const date = new Date(timestamp);
+    return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+}
+
+function testDatabase() {
+    console.log('Testing database connection...');
+    
+    // Show loading state
+    $('#recentActivity').html(`
+        <div class="text-center py-4">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-2">Testing database connection...</p>
+        </div>
+    `);
+    
+    fetch('/admin/api/test/db')
+        .then(response => response.json())
+        .then(data => {
+            console.log('Database test results:', data);
+            
+            if (data.success) {
+                $('#recentActivity').html(`
+                    <div class="alert alert-success">
+                        <h6><i class="fas fa-check-circle me-2"></i>Database Connection: SUCCESS</h6>
+                        <hr>
+                        <strong>Results:</strong>
+                        <ul class="mb-0 mt-2">
+                            <li>Appointments: ${data.results.appointments}</li>
+                            <li>Customers: ${data.results.customers}</li>
+                            <li>Products: ${data.results.products}</li>
+                            <li>Staff: ${data.results.staff}</li>
+                        </ul>
+                        <hr>
+                        <small><strong>Available Models:</strong> ${data.availableModels.join(', ')}</small>
+                    </div>
+                `);
+                
+                // Reload stats after successful test
+                loadDashboardStats();
+            } else {
+                $('#recentActivity').html(`
+                    <div class="alert alert-danger">
+                        <h6><i class="fas fa-exclamation-triangle me-2"></i>Database Connection: FAILED</h6>
+                        <p class="mb-0">${data.error}</p>
+                    </div>
+                `);
+            }
+        })
+        .catch(error => {
+            console.error('Database test error:', error);
+            $('#recentActivity').html(`
+                <div class="alert alert-danger">
+                    <h6><i class="fas fa-exclamation-triangle me-2"></i>Database Test: ERROR</h6>
+                    <p class="mb-0">${error.message}</p>
+                </div>
+            `);
+        });
+}
+</script>

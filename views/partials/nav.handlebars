@@ -1,0 +1,654 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top shadow-sm">
+    <div class="container">
+        <!-- Brand/logo -->
+        <a class="navbar-brand" href="/">
+            <img id="nav-logo" src="/assets/images/Blvd6Logo.png" alt="Salon Logo" class="img-fluid" style="max-height: 50px;">
+        </a>
+        
+        <!-- Mobile menu button -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <!-- Navigation Links -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <!-- Public Navigation -->
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0" id="public-ul">
+                <li class="nav-item">
+                    <a class="nav-link" href="/" id="iHome">
+                        <i class="fas fa-home me-1"></i> Home
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/about" id="iAbout">
+                        <i class="fas fa-info-circle me-1"></i> About
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/services" id="iServices">
+                        <i class="fas fa-spa me-1"></i> Services
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/products" id="iProducts">
+                        <i class="fas fa-shopping-bag me-1"></i> Products
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/contactus" id="iContact">
+                        <i class="fas fa-envelope me-1"></i> Contact Us
+                    </a>
+                </li>
+            </ul>
+            
+            <!-- Admin Navigation (Hidden by default) -->
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 d-none" id="admin-ul" style="display: none !important;">
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/salon/edit">
+                        <i class="fas fa-store me-1"></i> Salon
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/products">
+                        <i class="fas fa-boxes me-1"></i> Products
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/customers">
+                        <i class="fas fa-users me-1"></i> Customers
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/staff">
+                        <i class="fas fa-user-tie me-1"></i> Staff
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/services">
+                        <i class="fas fa-spa me-1"></i> Services
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/appointments">
+                        <i class="fas fa-calendar-alt me-1"></i> Appointments
+                    </a>
+                </li>
+            </ul>
+            
+            <!-- User Account Section -->
+            <div class="d-flex align-items-center">
+                <!-- Book Now Button -->
+                <button class="btn btn-primary me-3" data-bs-toggle="modal" data-bs-target="#appointmentModal">
+                    <i class="fas fa-calendar-alt me-2"></i>Book Now
+                </button>
+                
+                <!-- User Account Dropdown -->
+                <div class="dropdown" id="userAccountDropdown">
+                    <!-- Not Logged In State -->
+                    <div id="notLoggedIn" class="d-flex align-items-center">
+                        <button class="btn btn-outline-primary me-2" id="headerLoginBtn">
+                            <i class="fas fa-sign-in-alt me-1"></i>Sign In
+                        </button>
+                    </div>
+                    
+                    <!-- Logged In State -->
+                    <div id="loggedIn" class="d-none">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <div class="user-avatar me-2">
+                                <img id="userAvatarImg" src="" alt="User" class="rounded-circle" style="width: 32px; height: 32px; display: none;">
+                                <i id="userAvatarIcon" class="fas fa-user-circle fa-2x text-primary"></i>
+                            </div>
+                            <span id="userNameNav">User</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li id="customer-dashboard-link"><a class="dropdown-item" href="/dashboard">
+                                <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                            </a></li>
+                            <li id="admin-dashboard-link" style="display: none;"><a class="dropdown-item" href="/admin">
+                                <i class="fas fa-cogs me-2"></i>Admin Dashboard
+                            </a></li>
+                            <li><a class="dropdown-item" href="/profile">
+                                <i class="fas fa-user me-2"></i>My Profile
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" id="headerLogoutBtn">
+                                <i class="fas fa-sign-out-alt me-2"></i>Sign Out
+                            </a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Appointment Booking Modal -->
+<div class="modal fade" id="appointmentModal" tabindex="-1" aria-labelledby="appointmentModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="appointmentModalLabel">
+                    <i class="fas fa-calendar-alt me-2"></i>Book Your Appointment
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Login Required Section (shown when not authenticated) -->
+                <div id="loginRequiredSection" class="text-center py-5">
+                    <div class="mb-4">
+                        <i class="fas fa-lock fa-4x text-primary mb-3"></i>
+                        <h4>Sign In Required</h4>
+                        <p class="text-muted mb-4">Please sign in with your Google account to book an appointment. This helps us manage your bookings and provide better service.</p>
+                    </div>
+                    
+                    <div class="d-grid gap-2 col-6 mx-auto">
+                        <button class="btn btn-primary btn-lg" onclick="signInForBooking()">
+                            <i class="fab fa-google me-2"></i>Sign in with Google
+                        </button>
+                        <button class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                            <i class="fas fa-times me-2"></i>Cancel
+                        </button>
+                    </div>
+                    
+                    <div class="mt-4 pt-3 border-top">
+                        <h6 class="text-muted">Why do I need to sign in?</h6>
+                        <ul class="list-unstyled text-start text-muted small">
+                            <li><i class="fas fa-check text-success me-2"></i>View all your appointments in one place</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Receive appointment updates and reminders</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Quick booking with saved information</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Easy rescheduling and cancellation</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Booking Form Section (shown when authenticated) -->
+                <div id="bookingFormSection" style="display: none;">
+                    <!-- Welcome Message for Authenticated Users -->
+                    <div id="welcomeMessage" class="alert alert-success mb-4" style="display: none;">
+                        <i class="fas fa-user-check me-2"></i>
+                        Welcome back, <span id="welcomeUserName"></span>! Ready to book your next appointment?
+                    </div>
+                    
+                    <!-- Internal Booking Form -->
+                    <form id="appointmentForm" class="needs-validation" novalidate>
+                        <!-- User info is now auto-filled from authenticated user -->
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Your account information will be used for this appointment.
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="service" class="form-label">Preferred Service *</label>
+                                <select class="form-select" id="service" name="service" autocomplete="off" required>
+                                    <option value="">Select a service...</option>
+                                    <option value="haircut">Haircut & Styling</option>
+                                    <option value="color">Hair Coloring</option>
+                                    <option value="blowout">Blowout</option>
+                                    <option value="updo">Special Occasion Updo</option>
+                                    <option value="treatment">Hair Treatment</option>
+                                    <option value="consultation">Consultation</option>
+                                </select>
+                                <div class="invalid-feedback">Please select a service.</div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="phone" class="form-label">Phone Number *</label>
+                                <input type="tel" class="form-control" id="phone" name="phone" autocomplete="tel" required placeholder="(555) 123-4567">
+                                <div class="invalid-feedback">Please enter your phone number.</div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="preferredDate" class="form-label">Preferred Date *</label>
+                                <input type="date" class="form-control" id="preferredDate" name="preferredDate" autocomplete="off" required>
+                                <div class="invalid-feedback">Please select your preferred date.</div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="preferredTime" class="form-label">Preferred Time</label>
+                                <select class="form-select" id="preferredTime" name="preferredTime" autocomplete="off">
+                                    <option value="">Any time</option>
+                                    <option value="morning">Morning (9 AM - 12 PM)</option>
+                                    <option value="afternoon">Afternoon (12 PM - 4 PM)</option>
+                                    <option value="evening">Evening (4 PM - 7 PM)</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="notes" class="form-label">Additional Notes</label>
+                            <textarea class="form-control" id="notes" name="notes" rows="3" placeholder="Any special requests or additional information..." autocomplete="off"></textarea>
+                        </div>
+                        
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-paper-plane me-2"></i>Request Appointment
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Contact Information -->
+                <div class="mt-4 pt-3 border-top">
+                    <div class="row text-center">
+                        <div class="col-md-6">
+                            <h6><i class="fas fa-phone me-2"></i>Call Us</h6>
+                            <p class="mb-0"><a href="tel:+1234567890" class="text-decoration-none">(123) 456-7890</a></p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6><i class="fas fa-clock me-2"></i>Hours</h6>
+                            <p class="mb-0">Mon-Sat: 9 AM - 7 PM<br>Sun: 10 AM - 5 PM</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Global authentication state
+let currentUser = null;
+let isAuthenticated = false;
+
+// Add active class to current page
+$(document).ready(function() {
+    const currentPage = window.location.pathname;
+    $('.nav-link').each(function() {
+        if ($(this).attr('href') === currentPage) {
+            $(this).addClass('active');
+            $(this).attr('aria-current', 'page');
+        }
+    });
+    
+    // Initialize tooltips
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+    
+    // Check user authentication status on page load
+    // Delay slightly if on dashboard to let dashboard handle its own auth check first
+    if (window.location.pathname === '/dashboard') {
+        setTimeout(checkAuthStatus, 1000);
+    } else {
+        // Normal check for regular page loads
+        performAuthCheck();
+    }
+    
+    // Header login button
+    $('#headerLoginBtn').on('click', function() {
+        console.log('🔄 Redirecting to Google OAuth...');
+        window.location.href = '/auth/google';
+    });
+    
+    // Header logout button
+    $('#headerLogoutBtn').on('click', function(e) {
+        e.preventDefault();
+        
+        console.log('🔄 Logging out...');
+        
+        fetch('/auth/logout', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Update global state
+                currentUser = null;
+                isAuthenticated = false;
+                
+                // Update UI
+                updateNavAuthState(false);
+                
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Signed Out',
+                    text: 'You have been successfully signed out.',
+                    confirmButtonColor: '#6366f1'
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Logout Failed',
+                    text: 'Failed to sign out. Please try again.',
+                    confirmButtonColor: '#6366f1'
+                });
+            }
+        })
+        .catch(error => {
+            console.error('❌ Error during logout:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Network error during logout. Please try again.',
+                confirmButtonColor: '#6366f1'
+            });
+        });
+    });
+    
+    // Handle appointment form submission
+    $('#appointmentForm').on('submit', function(e) {
+        e.preventDefault();
+        
+        // Check authentication first
+        if (!isAuthenticated) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Sign In Required',
+                text: 'Please sign in to book an appointment.',
+                confirmButtonColor: '#6366f1',
+                confirmButtonText: 'Sign In'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = '/auth/google';
+                }
+            });
+            return;
+        }
+        
+        // Check if form is valid
+        if (!this.checkValidity()) {
+            e.stopPropagation();
+            $(this).addClass('was-validated');
+            return;
+        }
+        
+        const formData = {
+            service: $('#service').val(),
+            phone: $('#phone').val(),
+            preferredDate: $('#preferredDate').val(),
+            preferredTime: $('#preferredTime').val(),
+            notes: $('#notes').val()
+        };
+        
+        // Show loading state
+        const submitBtn = $(this).find('button[type="submit"]');
+        const originalText = submitBtn.html();
+        submitBtn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-2"></span>Submitting...');
+        
+        // Submit appointment request
+        fetch('/appointment-request', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Close modal
+                $('#appointmentModal').modal('hide');
+                
+                // Show success message
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Appointment Requested!',
+                    html: `
+                        <p>Your appointment request has been submitted successfully.</p>
+                        <p><strong>Confirmation Code:</strong> <code>${data.confirmationCode}</code></p>
+                        <p>We will contact you soon to confirm your appointment.</p>
+                    `,
+                    confirmButtonColor: '#6366f1',
+                    confirmButtonText: 'View My Dashboard'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = '/dashboard';
+                    }
+                });
+                
+                // Reset form
+                $('#appointmentForm')[0].reset();
+                $('#appointmentForm').removeClass('was-validated');
+            } else {
+                if (data.requiresLogin) {
+                    // User needs to login
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Sign In Required',
+                        text: data.message,
+                        confirmButtonColor: '#6366f1',
+                        confirmButtonText: 'Sign In'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = '/auth/google';
+                        }
+                    });
+                } else {
+                    // Other error
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Booking Failed',
+                        text: data.message,
+                        confirmButtonColor: '#6366f1'
+                    });
+                }
+            }
+        })
+        .catch(error => {
+            console.error('❌ Error submitting appointment:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Failed to submit appointment request. Please try again.',
+                confirmButtonColor: '#6366f1'
+            });
+        })
+        .finally(() => {
+            // Restore button state
+            submitBtn.prop('disabled', false).html(originalText);
+        });
+    });
+});
+
+// Toggle between login required and booking form sections based on authentication status
+function toggleBookingModalSections(authenticated, user = null) {
+    if (authenticated && user) {
+        $('#loginRequiredSection').hide();
+        $('#bookingFormSection').show();
+        
+        // Show welcome message with user name
+        $('#welcomeMessage').show();
+        $('#welcomeUserName').text(user.name || 'User');
+    } else {
+        $('#loginRequiredSection').show();
+        $('#bookingFormSection').hide();
+    }
+}
+
+// Check authentication status when booking modal is shown
+$('#appointmentModal').on('shown.bs.modal', function() {
+    console.log('📋 Booking modal opened, checking auth status...');
+    checkModalAuthStatus();
+});
+
+// Update booking modal sections based on authentication status
+function checkModalAuthStatus() {
+    fetch('/auth/user')
+        .then(response => response.json())
+        .then(data => {
+            console.log('📋 Modal auth check result:', data);
+            toggleBookingModalSections(data.isAuthenticated, data.user);
+        })
+        .catch(error => {
+            console.error('❌ Error checking modal auth status:', error);
+            toggleBookingModalSections(false);
+        });
+}
+
+// Check authentication status for navigation
+function checkAuthStatus() {
+    console.log('🔄 Checking authentication status...');
+    
+    // Check for URL parameters to determine if we just completed OAuth
+    const urlParams = new URLSearchParams(window.location.search);
+    const authStatus = urlParams.get('auth');
+    
+    // If we just came from OAuth, use retry logic
+    if (authStatus === 'success') {
+        console.log('🔄 Just completed OAuth, checking session with retry logic...');
+        checkAuthWithRetry();
+    } else {
+        // Normal check for regular page loads
+        performAuthCheck();
+    }
+}
+
+function checkAuthWithRetry(attempt = 1, maxAttempts = 5) {
+    console.log(`🔄 Nav auth check attempt ${attempt}/${maxAttempts}...`);
+    
+    fetch('/auth/user', {
+        method: 'GET',
+        credentials: 'same-origin',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('✅ Nav auth check response:', data);
+        
+        if (data.success && data.isAuthenticated && data.user) {
+            console.log('✅ Session found on attempt', attempt);
+            // Update global state
+            isAuthenticated = data.isAuthenticated;
+            currentUser = data.user;
+            
+            // Update UI
+            updateNavAuthState(isAuthenticated, currentUser);
+        } else {
+            // Session not ready yet, retry if we haven't exceeded max attempts
+            if (attempt < maxAttempts) {
+                const delay = Math.min(1000 * Math.pow(2, attempt - 1), 5000); // Exponential backoff, max 5s
+                console.log(`⏳ Session not ready, retrying in ${delay}ms (attempt ${attempt + 1}/${maxAttempts})`);
+                console.log('🔍 Debug info:', data.debug);
+                
+                setTimeout(() => {
+                    checkAuthWithRetry(attempt + 1, maxAttempts);
+                }, delay);
+            } else {
+                console.log('❌ Max retry attempts reached, showing not authenticated state');
+                console.log('🔍 Final debug info:', data.debug);
+                // Set default state
+                isAuthenticated = false;
+                currentUser = null;
+                updateNavAuthState(false);
+            }
+        }
+    })
+    .catch(error => {
+        console.error(`❌ Error on nav auth check attempt ${attempt}:`, error);
+        
+        // Retry on error if we haven't exceeded max attempts
+        if (attempt < maxAttempts) {
+            const delay = Math.min(1000 * Math.pow(2, attempt - 1), 5000); // Exponential backoff, max 5s
+            console.log(`⏳ Retrying due to error in ${delay}ms (attempt ${attempt + 1}/${maxAttempts})`);
+            
+            setTimeout(() => {
+                checkAuthWithRetry(attempt + 1, maxAttempts);
+            }, delay);
+        } else {
+            console.log('❌ Max retry attempts reached due to errors, showing not authenticated state');
+            // Set default state
+            isAuthenticated = false;
+            currentUser = null;
+            updateNavAuthState(false);
+        }
+    });
+}
+
+function performAuthCheck() {
+    fetch('/auth/user', {
+        method: 'GET',
+        credentials: 'same-origin',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('✅ Nav auth status response:', data);
+        
+        // Update global state
+        isAuthenticated = data.isAuthenticated || false;
+        currentUser = data.user || null;
+        
+        // Update UI
+        updateNavAuthState(isAuthenticated, currentUser);
+    })
+    .catch(error => {
+        console.error('❌ Error checking nav auth status:', error);
+        
+        // Set default state
+        isAuthenticated = false;
+        currentUser = null;
+        updateNavAuthState(false);
+    });
+}
+
+function updateNavAuthState(authenticated, user = null) {
+    console.log('🔄 Updating nav auth state:', { authenticated, user: user?.name, role: user?.role });
+    
+    if (authenticated && user) {
+        // Show logged in state
+        $('#notLoggedIn').addClass('d-none');
+        $('#loggedIn').removeClass('d-none');
+        
+        // Update user info
+        $('#userNameNav').text(user.name || 'User');
+        
+        // Update avatar
+        if (user.picture) {
+            $('#userAvatarImg').attr('src', user.picture).show();
+            $('#userAvatarIcon').hide();
+        } else {
+            $('#userAvatarImg').hide();
+            $('#userAvatarIcon').show();
+        }
+
+        // Use global function to handle role-based UI changes
+        if (typeof updateUIVisibility === 'function') {
+            updateUIVisibility(user);
+        }
+        
+        console.log('✅ User interface updated for:', user.name);
+    } else {
+        // Show not logged in state
+        $('#notLoggedIn').removeClass('d-none');
+        $('#loggedIn').addClass('d-none');
+        
+        // Use global function for guest users
+        if (typeof updateUIVisibility === 'function') {
+            updateUIVisibility(null);
+        }
+        
+        console.log('✅ User interface updated for guest user');
+    }
+}
+
+// Sign in for booking
+function signInForBooking() {
+    console.log('🔄 Signing in for booking...');
+    window.location.href = '/auth/google';
+}
+
+// Global function to refresh auth status (can be called from other pages)
+window.refreshAuthStatus = function() {
+    checkAuthStatus();
+};
+</script>

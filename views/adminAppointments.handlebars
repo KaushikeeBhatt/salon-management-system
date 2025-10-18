@@ -1,0 +1,1125 @@
+<div class="container-fluid py-4">
+    <!-- Header Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center flex-wrap">
+                <div class="mb-3 mb-md-0">
+                    <h1 class="section-title mb-2">
+                        {{#if filter}}
+                            {{#if (eq filter 'pending')}}Pending Appointments{{/if}}
+                        {{else}}
+                            All Appointments
+                        {{/if}}
+                    </h1>
+                    <p class="text-muted mb-0">Manage customer appointments and schedules</p>
+                </div>
+                <div class="d-flex gap-2 flex-wrap">
+                    <a href="/admin" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+                    </a>
+                    <div class="btn-group" role="group">
+                        <a href="/admin/appointments" class="btn {{#if filter}}{{#unless (eq filter 'pending')}}btn-primary{{/unless}}{{else}}btn-primary{{/if}}">
+                            <i class="fas fa-list me-1"></i>All
+                        </a>
+                        <a href="/admin/appointments/pending" class="btn {{#if filter}}{{#if (eq filter 'pending')}}btn-warning{{else}}btn-outline-warning{{/if}}{{else}}btn-outline-warning{{/if}}">
+                            <i class="fas fa-clock me-1"></i>Pending
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3 col-sm-6 mb-3">
+            <div class="stat-card bg-primary text-white">
+                <div class="stat-card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="stat-card-title">Total Appointments</h6>
+                            <h3 class="stat-card-value" id="totalAppointments">{{appointments.length}}</h3>
+                        </div>
+                        <div class="stat-card-icon">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6 mb-3">
+            <div class="stat-card bg-warning text-white">
+                <div class="stat-card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="stat-card-title">Pending</h6>
+                            <h3 class="stat-card-value" id="pendingCount">0</h3>
+                        </div>
+                        <div class="stat-card-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6 mb-3">
+            <div class="stat-card bg-success text-white">
+                <div class="stat-card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="stat-card-title">Confirmed</h6>
+                            <h3 class="stat-card-value" id="confirmedCount">0</h3>
+                        </div>
+                        <div class="stat-card-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6 mb-3">
+            <div class="stat-card bg-info text-white">
+                <div class="stat-card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="stat-card-title">Completed</h6>
+                            <h3 class="stat-card-value" id="completedCount">0</h3>
+                        </div>
+                        <div class="stat-card-icon">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search and Filter Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0">
+                                    <i class="fas fa-search text-muted"></i>
+                                </span>
+                                <input type="text" class="form-control border-start-0" id="searchInput" placeholder="Search by customer, service, or email...">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <select class="form-select" id="statusFilter">
+                                <option value="">All Statuses</option>
+                                <option value="pending">Pending</option>
+                                <option value="confirmed">Confirmed</option>
+                                <option value="completed">Completed</option>
+                                <option value="cancelled">Cancelled</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="date" class="form-control" id="dateFilter" placeholder="Filter by date">
+                        </div>
+                        <div class="col-md-2">
+                            <button class="btn btn-outline-secondary w-100" onclick="clearFilters()">
+                                <i class="fas fa-times me-1"></i>Clear
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Appointments Table -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-0 py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h4 class="mb-0">
+                            <i class="fas fa-calendar-alt me-2 text-primary"></i>Appointments
+                            <span class="badge bg-primary ms-2" id="appointmentCount">{{appointments.length}}</span>
+                        </h4>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-sm btn-outline-primary" onclick="exportAppointments()">
+                                <i class="fas fa-download me-1"></i>Export
+                            </button>
+                            <button class="btn btn-sm btn-outline-secondary" onclick="refreshAppointments()">
+                                <i class="fas fa-sync-alt me-1"></i>Refresh
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    {{#if appointments.length}}
+                    <!-- Debug Info (temporarily visible) -->
+                    <div class="alert alert-info m-3" style="font-size: 0.875rem;">
+                        <strong><i class="fas fa-info-circle me-2"></i>Debug Info:</strong>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <ul class="mb-0">
+                                    <li>Total Appointments: {{totalAppointments}}</li>
+                                    <li>Appointments Array Length: {{appointments.length}}</li>
+                                    <li>All Appointments Count: {{allAppointments.length}}</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <ul class="mb-0">
+                                    <li>Pending Count: {{pendingAppointments}}</li>
+                                    <li>Pending Only Length: {{pendingOnly.length}}</li>
+                                    <li>Filter: {{filter}}</li>
+                                </ul>
+                            </div>
+                        </div>
+                        {{#if sampleData}}
+                        <details class="mt-2">
+                            <summary>Sample Data</summary>
+                            <pre class="mt-2 small text-muted">{{{json sampleData}}}</pre>
+                        </details>
+                        {{/if}}
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0" id="appointmentsTable">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="px-4">Customer</th>
+                                    <th>Service</th>
+                                    <th>Preferred Date</th>
+                                    <th>Preferred Time</th>
+                                    <th>Status</th>
+                                    <th>Booked On</th>
+                                    <th class="text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each appointments}}
+                                <tr class="appointment-row status-{{status}}" data-status="{{status}}" data-date="{{preferredDate}}" data-customer="{{firstName}} {{lastName}}" data-service="{{service}}" data-email="{{email}}">
+                                    <td class="px-4">
+                                        <div class="d-flex align-items-center">
+                                            <div class="avatar-circle me-3">
+                                                {{firstChar firstName}}{{firstChar lastName}}
+                                            </div>
+                                            <div>
+                                                <div class="fw-semibold">
+                                                    {{#if firstName}}{{firstName}}{{else}}<em class="text-muted">No name</em>{{/if}}
+                                                    {{#if lastName}} {{lastName}}{{/if}}
+                                                </div>
+                                                <div class="text-muted small">{{#if email}}{{email}}{{else}}<em>No email</em>{{/if}}</div>
+                                                <div class="text-muted small">{{#if phone}}{{phone}}{{else}}<em>No phone</em>{{/if}}</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="service-badge">{{#if service}}{{service}}{{else}}<em class="text-muted">Not specified</em>{{/if}}</span>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <i class="fas fa-calendar text-muted me-2"></i>
+                                            <span>{{formatDate preferredDate}}</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <i class="fas fa-clock text-muted me-2"></i>
+                                            <span>{{#if preferredTime}}{{preferredTime}}{{else}}<em class="text-muted">Any time</em>{{/if}}</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        {{#if (eq status 'pending')}}<span class="status-badge status-pending"><i class="fas fa-clock me-1"></i>Pending</span>{{/if}}
+                                        {{#if (eq status 'confirmed')}}<span class="status-badge status-confirmed"><i class="fas fa-check-circle me-1"></i>Confirmed</span>{{/if}}
+                                        {{#if (eq status 'completed')}}<span class="status-badge status-completed"><i class="fas fa-calendar-check me-1"></i>Completed</span>{{/if}}
+                                        {{#if (eq status 'cancelled')}}<span class="status-badge status-cancelled"><i class="fas fa-times-circle me-1"></i>Cancelled</span>{{/if}}
+                                    </td>
+                                    <td>
+                                        <div class="text-muted small">
+                                            {{formatDate createdAt}}
+                                        </div>
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="btn-group btn-group-sm shadow-sm">
+                                            <button class="btn btn-outline-primary" onclick="viewAppointment({{id}})" title="View Details">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            {{#if (eq status 'pending')}}
+                                            <button class="btn btn-outline-success" onclick="confirmAppointment({{id}})" title="Confirm Appointment">
+                                                <i class="fas fa-check"></i>
+                                            </button>
+                                            {{/if}}
+                                            {{#if (eq status 'confirmed')}}
+                                            <button class="btn btn-outline-info" onclick="completeAppointment({{id}})" title="Mark as Completed">
+                                                <i class="fas fa-check-double"></i>
+                                            </button>
+                                            {{/if}}
+                                            {{#unless (eq status 'completed')}}
+                                            <button class="btn btn-outline-warning" onclick="cancelAppointment({{id}})" title="Cancel Appointment">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                            {{/unless}}
+                                            <button class="btn btn-outline-danger" onclick="deleteAppointment({{id}})" title="Delete Appointment">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                    {{else}}
+                    <div class="text-center py-5">
+                        <div class="empty-state">
+                            <i class="fas fa-calendar-times fa-4x text-muted mb-4"></i>
+                            <h4 class="text-muted">No Appointments Found</h4>
+                            <p class="text-muted">
+                                {{#if filter}}
+                                    No {{filter}} appointments at the moment.
+                                {{else}}
+                                    No appointments have been booked yet.
+                                {{/if}}
+                            </p>
+                            <div class="mt-4">
+                                <button class="btn btn-primary me-2" onclick="refreshAppointments()">
+                                    <i class="fas fa-sync-alt me-1"></i>Refresh
+                                </button>
+                                <a href="/admin/debug-appointments" class="btn btn-outline-info">
+                                    <i class="fas fa-bug me-1"></i>Debug
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {{/if}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Appointment Details Modal -->
+<div class="modal fade" id="appointmentModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header border-0 bg-primary text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-calendar-alt me-2"></i>Appointment Details
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="appointmentDetails">
+                <!-- Appointment details will be loaded here -->
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Confirm Appointment Modal -->
+<div class="modal fade" id="confirmModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header border-0 bg-success text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-check-circle me-2"></i>Confirm Appointment
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="confirmForm">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">
+                            <i class="fas fa-calendar-alt me-2"></i>Confirmed Date & Time
+                        </label>
+                        <input type="datetime-local" class="form-control form-control-lg" id="confirmedDateTime" required>
+                    </div>
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        Please select the confirmed date and time for this appointment.
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-success" onclick="submitConfirmation()">
+                    <i class="fas fa-check me-2"></i>Confirm Appointment
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Loading Overlay -->
+<div class="loading-overlay d-none" id="loadingOverlay">
+    <div class="loading-spinner"></div>
+</div>
+
+<style>
+/* Enhanced Styles for Admin Appointments */
+.stat-card {
+    border-radius: 12px;
+    border: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.stat-card-body {
+    padding: 1.5rem;
+}
+
+.stat-card-title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    opacity: 0.9;
+}
+
+.stat-card-value {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.stat-card-icon {
+    font-size: 2.5rem;
+    opacity: 0.8;
+}
+
+.avatar-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 0.875rem;
+}
+
+.service-badge {
+    background: #f8f9fa;
+    color: #495057;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.status-badge {
+    padding: 0.375rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: inline-flex;
+    align-items: center;
+}
+
+.status-pending {
+    background: rgba(245, 158, 11, 0.1);
+    color: #f59e0b;
+    border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+.status-confirmed {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+    border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.status-completed {
+    background: rgba(59, 130, 246, 0.1);
+    color: #3b82f6;
+    border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.status-cancelled {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.appointment-row {
+    transition: all 0.2s ease;
+}
+
+.appointment-row:hover {
+    background: rgba(99, 102, 241, 0.02);
+    transform: scale(1.005);
+}
+
+.btn-group .btn {
+    border-radius: 6px;
+    margin: 0 2px;
+    transition: all 0.2s ease;
+}
+
+.btn-group .btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.empty-state {
+    padding: 3rem;
+}
+
+.table th {
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+    color: #6b7280;
+    border: none;
+}
+
+.table td {
+    border: none;
+    vertical-align: middle;
+}
+
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(99, 102, 241, 0.3);
+    border-top: 3px solid #6366f1;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.info-card {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border: 1px solid #e9ecef;
+}
+
+.info-card-title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.info-card-content {
+    font-size: 0.875rem;
+}
+
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.25rem 0;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.info-item:last-child {
+    border-bottom: none;
+}
+
+.info-label {
+    font-weight: 500;
+    color: #6b7280;
+}
+
+.info-value {
+    font-weight: 600;
+    color: #374151;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .stat-card-value {
+        font-size: 1.5rem;
+    }
+    
+    .stat-card-icon {
+        font-size: 2rem;
+    }
+    
+    .btn-group {
+        flex-direction: column;
+    }
+    
+    .btn-group .btn {
+        margin: 2px 0;
+    }
+}
+</style>
+
+<script>
+$(document).ready(function() {
+    // Add admin classes to body for CSS targeting
+    document.body.classList.add('admin-user', 'admin-page');
+    
+    // Force admin navigation visibility
+    const adminNav = document.getElementById('admin-ul');
+    const publicNav = document.getElementById('public-ul');
+    
+    if (adminNav) {
+        adminNav.style.display = 'flex';
+        adminNav.style.visibility = 'visible';
+        adminNav.classList.remove('d-none');
+        console.log('✅ Admin nav forced visible');
+    }
+    
+    if (publicNav) {
+        publicNav.style.display = 'none';
+        publicNav.style.visibility = 'hidden';
+        publicNav.classList.add('d-none');
+        console.log('✅ Public nav hidden');
+    }
+    
+    // Initialize statistics
+    updateStatistics();
+    
+    // Setup search and filter functionality
+    setupSearchAndFilter();
+});
+
+let currentAppointmentId = null;
+
+// Helper function to show alerts with fallback
+function showAlert(title, text, icon) {
+    if (typeof Swal !== 'undefined') {
+        Swal.fire({
+            title: title,
+            text: text,
+            icon: icon,
+            confirmButtonColor: '#6366f1'
+        });
+    } else {
+        alert(title + ': ' + text);
+    }
+}
+
+// Update statistics counters
+function updateStatistics() {
+    const appointments = {{#if appointments}}[{{#each appointments}}{ id: {{this.id}}, status: "{{this.status}}", service: "{{this.service}}" },{{/each}}]{{else}}[]{{/if}};
+    
+    let pending = 0, confirmed = 0, completed = 0;
+    
+    appointments.forEach(appointment => {
+        switch(appointment.status) {
+            case 'pending': pending++; break;
+            case 'confirmed': confirmed++; break;
+            case 'completed': completed++; break;
+        }
+    });
+    
+    $('#pendingCount').text(pending);
+    $('#confirmedCount').text(confirmed);
+    $('#completedCount').text(completed);
+}
+
+// Setup search and filter functionality
+function setupSearchAndFilter() {
+    const searchInput = document.getElementById('searchInput');
+    const statusFilter = document.getElementById('statusFilter');
+    const dateFilter = document.getElementById('dateFilter');
+    
+    function filterAppointments() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const statusValue = statusFilter.value;
+        const dateValue = dateFilter.value;
+        
+        const rows = document.querySelectorAll('.appointment-row');
+        let visibleCount = 0;
+        
+        rows.forEach(row => {
+            const customer = row.dataset.customer.toLowerCase();
+            const service = row.dataset.service.toLowerCase();
+            const email = row.dataset.email.toLowerCase();
+            const status = row.dataset.status;
+            const date = row.dataset.date;
+            
+            const matchesSearch = !searchTerm || 
+                customer.includes(searchTerm) || 
+                service.includes(searchTerm) || 
+                email.includes(searchTerm);
+            
+            const matchesStatus = !statusValue || status === statusValue;
+            const matchesDate = !dateValue || date === dateValue;
+            
+            if (matchesSearch && matchesStatus && matchesDate) {
+                row.style.display = '';
+                visibleCount++;
+            } else {
+                row.style.display = 'none';
+            }
+        });
+        
+        $('#appointmentCount').text(visibleCount);
+    }
+    
+    if (searchInput) searchInput.addEventListener('input', filterAppointments);
+    if (statusFilter) statusFilter.addEventListener('change', filterAppointments);
+    if (dateFilter) dateFilter.addEventListener('change', filterAppointments);
+}
+
+// Clear all filters
+function clearFilters() {
+    const searchInput = document.getElementById('searchInput');
+    const statusFilter = document.getElementById('statusFilter');
+    const dateFilter = document.getElementById('dateFilter');
+    
+    if (searchInput) searchInput.value = '';
+    if (statusFilter) statusFilter.value = '';
+    if (dateFilter) dateFilter.value = '';
+    
+    // Trigger filter to show all appointments
+    if (searchInput) {
+        const event = new Event('input');
+        searchInput.dispatchEvent(event);
+    }
+}
+
+// Show loading overlay
+function showLoading() {
+    document.getElementById('loadingOverlay').classList.remove('d-none');
+}
+
+// Hide loading overlay
+function hideLoading() {
+    document.getElementById('loadingOverlay').classList.add('d-none');
+}
+
+// Refresh appointments
+function refreshAppointments() {
+    showLoading();
+    window.location.reload();
+}
+
+// Export appointments to CSV
+function exportAppointments() {
+    try {
+        console.log('📤 Exporting appointments...');
+        showLoading();
+        
+        // Get all visible appointment rows
+        const rows = document.querySelectorAll('.appointment-row:not([style*="display: none"])');
+        
+        if (rows.length === 0) {
+            hideLoading();
+            Swal.fire('No Data', 'No appointments to export', 'info');
+            return;
+        }
+        
+        // Prepare CSV data
+        const headers = ['Customer Name', 'Email', 'Phone', 'Service', 'Preferred Date', 'Preferred Time', 'Status', 'Booked On'];
+        const csvData = [headers];
+        
+        rows.forEach(row => {
+            const customer = row.dataset.customer || 'N/A';
+            const email = row.dataset.email || 'N/A';
+            const service = row.dataset.service || 'N/A';
+            const status = row.dataset.status || 'N/A';
+            const date = row.dataset.date || 'N/A';
+            
+            // Extract additional data from row cells
+            const cells = row.querySelectorAll('td');
+            const phone = cells[0]?.querySelector('.text-muted.small')?.textContent?.trim() || 'N/A';
+            const preferredTime = cells[3]?.querySelector('span')?.textContent?.trim() || 'N/A';
+            const bookedOn = cells[5]?.textContent?.trim() || 'N/A';
+            
+            csvData.push([customer, email, phone, service, date, preferredTime, status, bookedOn]);
+        });
+        
+        // Convert to CSV string
+        const csvString = csvData.map(row => 
+            row.map(field => `"${String(field).replace(/"/g, '""')}"`).join(',')
+        ).join('\n');
+        
+        // Create and download file
+        const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        
+        if (link.download !== undefined) {
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', `appointments_${new Date().toISOString().split('T')[0]}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            hideLoading();
+            Swal.fire('Success', `Exported ${rows.length} appointments to CSV`, 'success');
+        } else {
+            hideLoading();
+            Swal.fire('Error', 'Your browser does not support file downloads', 'error');
+        }
+    } catch (error) {
+        hideLoading();
+        console.error('❌ Export error:', error);
+        Swal.fire('Error', 'Failed to export appointments: ' + error.message, 'error');
+    }
+}
+
+function viewAppointment(id) {
+    console.log('👁️ Viewing appointment:', id);
+    
+    if (!id) {
+        console.error('❌ No appointment ID provided');
+        Swal.fire('Error', 'Invalid appointment ID', 'error');
+        return;
+    }
+    
+    showLoading();
+    
+    fetch(`/admin/appointments/${id}`)
+        .then(response => {
+            console.log('📡 Response status:', response.status);
+            return response.json();
+        })
+        .then(data => {
+            hideLoading();
+            console.log('📄 Response data:', data);
+            if (data.success) {
+                displayAppointmentDetails(data.appointment);
+            } else {
+                Swal.fire('Error', data.message || 'Failed to load appointment details', 'error');
+            }
+        })
+        .catch(error => {
+            hideLoading();
+            console.error('❌ Error loading appointment:', error);
+            Swal.fire('Error', 'Network error: ' + error.message, 'error');
+        });
+}
+
+function confirmAppointment(id) {
+    console.log('✅ Confirming appointment:', id);
+    
+    if (!id) {
+        console.error('❌ No appointment ID provided for confirmation');
+        Swal.fire('Error', 'Invalid appointment ID', 'error');
+        return;
+    }
+    
+    currentAppointmentId = id;
+    
+    // Set minimum date to today
+    const now = new Date();
+    const localDateTime = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+    const dateTimeInput = document.getElementById('confirmedDateTime');
+    
+    if (!dateTimeInput) {
+        console.error('❌ DateTime input not found');
+        Swal.fire('Error', 'Form component missing', 'error');
+        return;
+    }
+    
+    dateTimeInput.min = localDateTime;
+    
+    try {
+        const modal = new bootstrap.Modal(document.getElementById('confirmModal'));
+        modal.show();
+        console.log('🎆 Confirmation modal shown');
+    } catch (error) {
+        console.error('❌ Error showing modal:', error);
+        Swal.fire('Error', 'Failed to open confirmation dialog', 'error');
+    }
+}
+
+function completeAppointment(id) {
+    console.log('✅ Marking appointment as completed:', id);
+    
+    if (!id) {
+        console.error('❌ No appointment ID provided for completion');
+        showAlert('Error', 'Invalid appointment ID', 'error');
+        return;
+    }
+    
+    if (typeof Swal !== 'undefined') {
+        Swal.fire({
+            title: 'Mark as Completed?',
+            text: 'This will mark the appointment as completed. The service has been provided to the customer.',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#17a2b8',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Yes, Mark Complete'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                updateAppointmentStatus(id, 'completed');
+            }
+        });
+    } else {
+        // Fallback to native confirm if SweetAlert is not available
+        if (confirm('Mark this appointment as completed?')) {
+            updateAppointmentStatus(id, 'completed');
+        }
+    }
+}
+
+function cancelAppointment(id) {
+    console.log('❌ Cancelling appointment:', id);
+    
+    if (!id) {
+        console.error('❌ No appointment ID provided for cancellation');
+        showAlert('Error', 'Invalid appointment ID', 'error');
+        return;
+    }
+    
+    if (typeof Swal !== 'undefined') {
+        Swal.fire({
+            title: 'Cancel Appointment?',
+            text: 'Are you sure you want to cancel this appointment?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#dc3545',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Yes, Cancel It'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                updateAppointmentStatus(id, 'cancelled');
+            }
+        });
+    } else {
+        // Fallback to native confirm if SweetAlert is not available
+        if (confirm('Are you sure you want to cancel this appointment?')) {
+            updateAppointmentStatus(id, 'cancelled');
+        }
+    }
+}
+
+function deleteAppointment(id) {
+    Swal.fire({
+        title: 'Delete Appointment?',
+        text: 'Are you sure you want to delete this appointment? This action cannot be undone.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#dc3545',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Yes, Delete It'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            showLoading();
+            
+            fetch(`/admin/appointments/${id}`, {
+                method: 'DELETE'
+            })
+            .then(response => response.json())
+            .then(data => {
+                hideLoading();
+                if (data.success) {
+                    Swal.fire('Success', 'Appointment deleted successfully', 'success')
+                        .then(() => location.reload());
+                } else {
+                    Swal.fire('Error', 'Failed to delete appointment', 'error');
+                }
+            })
+            .catch(error => {
+                hideLoading();
+                console.error('Error deleting appointment:', error);
+                Swal.fire('Error', 'Failed to delete appointment', 'error');
+            });
+        }
+    });
+}
+
+function submitConfirmation() {
+    const dateTime = document.getElementById('confirmedDateTime').value;
+    if (!dateTime) {
+        Swal.fire('Error', 'Please select a date and time', 'error');
+        return;
+    }
+    
+    showLoading();
+    updateAppointmentStatus(currentAppointmentId, 'confirmed', dateTime);
+    bootstrap.Modal.getInstance(document.getElementById('confirmModal')).hide();
+}
+
+function updateAppointmentStatus(id, status, actualDateTime = null) {
+    console.log('🔄 Updating appointment status:', { id, status, actualDateTime });
+    
+    if (!id || !status) {
+        console.error('❌ Missing required parameters:', { id, status });
+        showAlert('Error', 'Missing appointment ID or status', 'error');
+        return;
+    }
+    
+    const data = { status };
+    if (actualDateTime) {
+        data.actualDateTime = actualDateTime;
+    }
+    
+    showLoading();
+    console.log('📤 Sending request to:', `/admin/appointments/${id}/status`);
+    console.log('📦 Request data:', data);
+    
+    fetch(`/admin/appointments/${id}/status`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => {
+        console.log('📡 Response status:', response.status, response.statusText);
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        hideLoading();
+        console.log('📄 Response data:', data);
+        if (data.success) {
+            const message = data.message || 'Appointment status updated successfully';
+            if (typeof Swal !== 'undefined') {
+                Swal.fire('Success', message, 'success').then(() => location.reload());
+            } else {
+                alert('Success: ' + message);
+                location.reload();
+            }
+        } else {
+            showAlert('Error', data.message || 'Failed to update appointment', 'error');
+        }
+    })
+    .catch(error => {
+        hideLoading();
+        console.error('❌ Error updating appointment:', error);
+        showAlert('Error', 'Network error: ' + error.message, 'error');
+    });
+}
+
+function displayAppointmentDetails(appointment) {
+    const formatDate = (date) => {
+        if (!date) return 'N/A';
+        return new Date(date).toLocaleDateString();
+    };
+    
+    const html = `
+        <div class="row">
+            <div class="col-md-6">
+                <div class="info-card">
+                    <h6 class="info-card-title">
+                        <i class="fas fa-user me-2"></i>Customer Information
+                    </h6>
+                    <div class="info-card-content">
+                        <div class="info-item">
+                            <span class="info-label">Name:</span>
+                            <span class="info-value">${appointment.firstName || 'N/A'} ${appointment.lastName || ''}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Email:</span>
+                            <span class="info-value">${appointment.email || 'N/A'}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Phone:</span>
+                            <span class="info-value">${appointment.phone || 'N/A'}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="info-card">
+                    <h6 class="info-card-title">
+                        <i class="fas fa-calendar-alt me-2"></i>Appointment Details
+                    </h6>
+                    <div class="info-card-content">
+                        <div class="info-item">
+                            <span class="info-label">Service:</span>
+                            <span class="info-value">${appointment.service || '<em class="text-muted">Not specified</em>'}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Preferred Date:</span>
+                            <span class="info-value">${formatDate(appointment.preferredDate)}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Preferred Time:</span>
+                            <span class="info-value">${appointment.preferredTime || '<em class="text-muted">Any time</em>'}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Status:</span>
+                            <span class="info-value">${getStatusBadge(appointment.status)}</span>
+                        </div>
+                        ${appointment.actualDateTime ? `
+                        <div class="info-item">
+                            <span class="info-label">Confirmed Date:</span>
+                            <span class="info-value">${formatDate(appointment.actualDateTime)}</span>
+                        </div>
+                        ` : ''}
+                    </div>
+                </div>
+            </div>
+        </div>
+        ${appointment.notes ? `
+        <div class="mt-3">
+            <div class="info-card">
+                <h6 class="info-card-title">
+                    <i class="fas fa-sticky-note me-2"></i>Notes
+                </h6>
+                <div class="info-card-content">
+                    <p class="mb-0">${appointment.notes}</p>
+                </div>
+            </div>
+        </div>
+        ` : ''}
+        <div class="mt-3">
+            <div class="info-card">
+                <h6 class="info-card-title">
+                    <i class="fas fa-clock me-2"></i>Booking Information
+                </h6>
+                <div class="info-card-content">
+                    <div class="info-item">
+                        <span class="info-label">Booked On:</span>
+                        <span class="info-value">${formatDate(appointment.createdAt)}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Appointment ID:</span>
+                        <span class="info-value">#${appointment.id}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.getElementById('appointmentDetails').innerHTML = html;
+    const modal = new bootstrap.Modal(document.getElementById('appointmentModal'));
+    modal.show();
+}
+
+// Helper function to get status badge HTML
+function getStatusBadge(status) {
+    const badges = {
+        'pending': '<span class="status-badge status-pending"><i class="fas fa-clock me-1"></i>Pending</span>',
+        'confirmed': '<span class="status-badge status-confirmed"><i class="fas fa-check-circle me-1"></i>Confirmed</span>',
+        'completed': '<span class="status-badge status-completed"><i class="fas fa-calendar-check me-1"></i>Completed</span>',
+        'cancelled': '<span class="status-badge status-cancelled"><i class="fas fa-times-circle me-1"></i>Cancelled</span>'
+    };
+    return badges[status] || status;
+}
+</script>

@@ -1,0 +1,593 @@
+<div class="container py-5">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-5">
+                <div>
+                    <h1 class="section-title mb-2">My Profile</h1>
+                    <p class="text-muted">Manage your profile and view your booking history.</p>
+                </div>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#appointmentModal">
+                    <i class="fas fa-plus me-2"></i>Book New Appointment
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- User Profile Information -->
+    <div class="row mb-5">
+        <div class="col-lg-4 mb-4">
+            <div class="dashboard-card">
+                <h4><i class="fas fa-user me-2"></i>Profile Information</h4>
+                <div id="userProfile">
+                    <div class="text-center mb-4">
+                        <div class="user-avatar mb-3">
+                            <i class="fas fa-user-circle fa-5x text-primary" id="userAvatarIcon"></i>
+                            <img id="userAvatarImg" src="" alt="User" class="rounded-circle" style="width: 80px; height: 80px; display: none;">
+                        </div>
+                        <h5 class="mt-2" id="userName">Guest User</h5>
+                        <p class="text-muted" id="userEmail">Not logged in</p>
+                        <p class="text-muted small" id="userJoinDate">Member since: --</p>
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-outline-primary" id="loginBtn">
+                            <i class="fab fa-google me-2"></i>Sign in with Google
+                        </button>
+                        <button class="btn btn-outline-secondary" id="logoutBtn" style="display: none;">
+                            <i class="fas fa-sign-out-alt me-2"></i>Sign Out
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-8">
+            <div class="dashboard-card">
+                <h4><i class="fas fa-chart-bar me-2"></i>Booking Statistics</h4>
+                
+                <!-- Login Required Message -->
+                <div id="loginRequired" class="text-center py-5">
+                    <i class="fas fa-lock fa-3x text-muted mb-3"></i>
+                    <h5>Sign In Required</h5>
+                    <p class="text-muted">Please sign in with Google to view your booking statistics.</p>
+                    <button class="btn btn-primary" id="loginBtn2">
+                        <i class="fab fa-google me-2"></i>Sign in with Google
+                    </button>
+                </div>
+                
+                <!-- Stats Cards -->
+                <div id="statsSection" style="display: none;">
+                    <div class="row">
+                        <div class="col-md-3 mb-3">
+                            <div class="stat-card text-center p-3 bg-light rounded">
+                                <h3 id="totalAppointments" class="text-primary mb-1">0</h3>
+                                <p class="mb-0 small text-muted">Total Bookings</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="stat-card text-center p-3 bg-light rounded">
+                                <h3 id="pendingAppointments" class="text-warning mb-1">0</h3>
+                                <p class="mb-0 small text-muted">Pending</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="stat-card text-center p-3 bg-light rounded">
+                                <h3 id="confirmedAppointments" class="text-success mb-1">0</h3>
+                                <p class="mb-0 small text-muted">Confirmed</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="stat-card text-center p-3 bg-light rounded">
+                                <h3 id="completedAppointments" class="text-info mb-1">0</h3>
+                                <p class="mb-0 small text-muted">Completed</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Current Bookings -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="dashboard-card">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h4><i class="fas fa-calendar-alt me-2"></i>Current Bookings</h4>
+                    <button class="btn btn-sm btn-outline-primary" onclick="refreshBookings()">
+                        <i class="fas fa-sync-alt me-1"></i>Refresh
+                    </button>
+                </div>
+                
+                <!-- Login Required Message -->
+                <div id="currentBookingsLoginRequired" class="text-center py-4">
+                    <i class="fas fa-lock fa-2x text-muted mb-3"></i>
+                    <p class="text-muted">Please sign in to view your current bookings.</p>
+                </div>
+                
+                <!-- Current Bookings List -->
+                <div id="currentBookingsList" style="display: none;">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Service</th>
+                                    <th>Preferred Date</th>
+                                    <th>Time</th>
+                                    <th>Status</th>
+                                    <th>Confirmation Code</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="currentBookingsTableBody">
+                                <!-- Current bookings will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div id="noCurrentBookings" class="text-center py-4" style="display: none;">
+                        <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+                        <h5>No Current Bookings</h5>
+                        <p class="text-muted">You don't have any pending or confirmed appointments.</p>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#appointmentModal">
+                            <i class="fas fa-plus me-2"></i>Book Your Next Appointment
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Past Bookings -->
+    <div class="row">
+        <div class="col-12">
+            <div class="dashboard-card">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h4><i class="fas fa-history me-2"></i>Past Bookings</h4>
+                    <div class="btn-group" role="group">
+                        <button class="btn btn-sm btn-outline-secondary" onclick="filterPastBookings('all')">All</button>
+                        <button class="btn btn-sm btn-outline-secondary" onclick="filterPastBookings('completed')">Completed</button>
+                        <button class="btn btn-sm btn-outline-secondary" onclick="filterPastBookings('cancelled')">Cancelled</button>
+                    </div>
+                </div>
+                
+                <!-- Login Required Message -->
+                <div id="pastBookingsLoginRequired" class="text-center py-4">
+                    <i class="fas fa-lock fa-2x text-muted mb-3"></i>
+                    <p class="text-muted">Please sign in to view your booking history.</p>
+                </div>
+                
+                <!-- Past Bookings List -->
+                <div id="pastBookingsList" style="display: none;">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Service</th>
+                                    <th>Date</th>
+                                    <th>Time</th>
+                                    <th>Status</th>
+                                    <th>Confirmation Code</th>
+                                    <th>Booked On</th>
+                                </tr>
+                            </thead>
+                            <tbody id="pastBookingsTableBody">
+                                <!-- Past bookings will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div id="noPastBookings" class="text-center py-4" style="display: none;">
+                        <i class="fas fa-history fa-3x text-muted mb-3"></i>
+                        <h5>No Past Bookings</h5>
+                        <p class="text-muted">You haven't completed any appointments yet.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Ensure jQuery is loaded before running profile code
+function initializeProfileWhenReady() {
+    if (typeof $ !== 'undefined') {
+        $(document).ready(function() {
+            console.log('🔄 Profile page loaded, jQuery available');
+            
+            // Check for authentication status from URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const authStatus = urlParams.get('auth');
+            const errorStatus = urlParams.get('error');
+            const errorDetails = urlParams.get('details');
+            
+            if (authStatus === 'success') {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Welcome!',
+                    text: 'You have been successfully signed in.',
+                    confirmButtonColor: '#6366f1'
+                });
+                // Clean URL
+                window.history.replaceState({}, document.title, window.location.pathname);
+            } else if (errorStatus) {
+                let errorMessage = 'Authentication failed. Please try again.';
+                switch(errorStatus) {
+                    case 'auth_failed':
+                        errorMessage = 'Google authentication failed. Please try again.';
+                        if (errorDetails) {
+                            errorMessage += ` Details: ${decodeURIComponent(errorDetails)}`;
+                        }
+                        break;
+                    case 'no_code':
+                        errorMessage = 'No authorization code received from Google.';
+                        break;
+                    case 'server_error':
+                        errorMessage = 'Server error during authentication. Please try again.';
+                        if (errorDetails) {
+                            errorMessage += ` Details: ${decodeURIComponent(errorDetails)}`;
+                        }
+                        break;
+                }
+                
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Authentication Error',
+                    text: errorMessage,
+                    confirmButtonColor: '#6366f1'
+                });
+                // Clean URL
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+            
+            // Initialize profile
+            initializeProfile();
+            
+            function initializeProfile() {
+                console.log('🔄 Initializing profile...');
+                
+                // Check authentication status with server
+                fetch('/auth/user')
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log('✅ Profile auth check:', data);
+                        
+                        if (data.success && data.isAuthenticated && data.user) {
+                            showUserProfile(data.user);
+                            loadUserBookings(data.user.id);
+                            
+                            // Update global auth state if available
+                            if (window.refreshAuthStatus) {
+                                window.refreshAuthStatus();
+                            }
+                        } else {
+                            showLoginRequired();
+                        }
+                    })
+                    .catch(error => {
+                        console.error('❌ Error checking auth status:', error);
+                        showLoginRequired();
+                    });
+            }
+            
+            function showUserProfile(user) {
+                console.log('✅ Showing user profile for:', user.name);
+                
+                $('#userName').text(user.name || 'User');
+                $('#userEmail').text(user.email || 'No email');
+                
+                // Format join date
+                if (user.createdAt) {
+                    const joinDate = new Date(user.createdAt).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long'
+                    });
+                    $('#userJoinDate').text(`Member since: ${joinDate}`);
+                }
+                
+                // Update avatar if user has profile picture
+                if (user.picture) {
+                    $('#userAvatarImg').attr('src', user.picture).show();
+                    $('#userAvatarIcon').hide();
+                } else {
+                    $('#userAvatarImg').hide();
+                    $('#userAvatarIcon').show();
+                }
+                
+                $('#loginBtn, #loginBtn2').hide();
+                $('#logoutBtn').show();
+                $('#loginRequired').hide();
+                $('#statsSection').show();
+                $('#currentBookingsLoginRequired, #pastBookingsLoginRequired').hide();
+                $('#currentBookingsList, #pastBookingsList').show();
+            }
+            
+            function showLoginRequired() {
+                console.log('⚠️ Showing login required state');
+                
+                $('#userName').text('Guest User');
+                $('#userEmail').text('Not logged in');
+                $('#userJoinDate').text('Member since: --');
+                $('#userAvatarImg').hide();
+                $('#userAvatarIcon').show();
+                $('#loginBtn, #loginBtn2').show();
+                $('#logoutBtn').hide();
+                $('#loginRequired').show();
+                $('#statsSection').hide();
+                $('#currentBookingsLoginRequired, #pastBookingsLoginRequired').show();
+                $('#currentBookingsList, #pastBookingsList').hide();
+                
+                // Reset stats
+                updateStats(0, 0, 0, 0);
+            }
+            
+            function loadUserBookings(userId) {
+                console.log(`🔄 Loading bookings for user ID: ${userId}`);
+                
+                // Show loading state
+                $('#currentBookingsTableBody, #pastBookingsTableBody').html(`
+                    <tr>
+                        <td colspan="6" class="text-center py-4">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <p class="mt-2 mb-0">Loading bookings...</p>
+                        </td>
+                    </tr>
+                `);
+                
+                // Fetch appointments
+                fetch('/my-appointments')
+                    .then(response => {
+                        console.log('📋 Bookings response status:', response.status);
+                        if (!response.ok) {
+                            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log('📋 Bookings data:', data);
+                        if (data.success) {
+                            displayBookings(data.appointments);
+                            calculateStats(data.appointments);
+                        } else {
+                            console.error('❌ Failed to load bookings:', data.message);
+                            showNoBookings();
+                        }
+                    })
+                    .catch(error => {
+                        console.error('❌ Error loading bookings:', error);
+                        showNoBookings();
+                    });
+            }
+            
+            function displayBookings(appointments) {
+                console.log(`✅ Displaying ${appointments.length} bookings`);
+                
+                // Separate current and past bookings
+                const currentBookings = appointments.filter(apt => 
+                    apt.status === 'pending' || apt.status === 'confirmed' || apt.status === 'approved'
+                );
+                const pastBookings = appointments.filter(apt => 
+                    apt.status === 'completed' || apt.status === 'cancelled'
+                );
+                
+                displayCurrentBookings(currentBookings);
+                displayPastBookings(pastBookings);
+            }
+            
+            function displayCurrentBookings(bookings) {
+                const tbody = $('#currentBookingsTableBody');
+                tbody.empty();
+                
+                if (bookings.length === 0) {
+                    $('#noCurrentBookings').show();
+                    return;
+                }
+                
+                bookings.forEach(booking => {
+                    const row = `
+                        <tr>
+                            <td>${booking.service}</td>
+                            <td>${new Date(booking.preferredDate).toLocaleDateString()}</td>
+                            <td>${booking.preferredTime || 'Any time'}</td>
+                            <td>${getStatusBadge(booking.status)}</td>
+                            <td><code>${booking.confirmationCode}</code></td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-primary me-1" onclick="viewBookingDetails('${booking.confirmationCode}')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-secondary" onclick="copyConfirmationCode('${booking.confirmationCode}')">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                    tbody.append(row);
+                });
+                
+                $('#noCurrentBookings').hide();
+            }
+            
+            function displayPastBookings(bookings) {
+                const tbody = $('#pastBookingsTableBody');
+                tbody.empty();
+                
+                if (bookings.length === 0) {
+                    $('#noPastBookings').show();
+                    return;
+                }
+                
+                bookings.forEach(booking => {
+                    const row = `
+                        <tr>
+                            <td>${booking.service}</td>
+                            <td>${new Date(booking.preferredDate).toLocaleDateString()}</td>
+                            <td>${booking.preferredTime || 'Any time'}</td>
+                            <td>${getStatusBadge(booking.status)}</td>
+                            <td><code>${booking.confirmationCode}</code></td>
+                            <td>${new Date(booking.createdAt).toLocaleDateString()}</td>
+                        </tr>
+                    `;
+                    tbody.append(row);
+                });
+                
+                $('#noPastBookings').hide();
+            }
+            
+            function showNoBookings() {
+                console.log('📋 No bookings to display');
+                $('#currentBookingsTableBody, #pastBookingsTableBody').empty();
+                $('#noCurrentBookings, #noPastBookings').show();
+                updateStats(0, 0, 0, 0);
+            }
+            
+            function calculateStats(appointments) {
+                const stats = {
+                    total: appointments.length,
+                    pending: appointments.filter(a => a.status === 'pending').length,
+                    confirmed: appointments.filter(a => a.status === 'confirmed' || a.status === 'approved').length,
+                    completed: appointments.filter(a => a.status === 'completed').length
+                };
+                
+                console.log('📊 Booking stats:', stats);
+                updateStats(stats.total, stats.pending, stats.confirmed, stats.completed);
+            }
+            
+            function updateStats(total, pending, confirmed, completed) {
+                $('#totalAppointments').text(total);
+                $('#pendingAppointments').text(pending);
+                $('#confirmedAppointments').text(confirmed);
+                $('#completedAppointments').text(completed);
+            }
+            
+            function getStatusBadge(status) {
+                const badges = {
+                    'pending': '<span class="badge bg-warning">Pending</span>',
+                    'confirmed': '<span class="badge bg-success">Confirmed</span>',
+                    'approved': '<span class="badge bg-success">Approved</span>',
+                    'completed': '<span class="badge bg-info">Completed</span>',
+                    'cancelled': '<span class="badge bg-danger">Cancelled</span>'
+                };
+                return badges[status] || '<span class="badge bg-secondary">Unknown</span>';
+            }
+            
+            // Login buttons
+            $('#loginBtn, #loginBtn2').on('click', function() {
+                console.log('🔄 Redirecting to Google OAuth from profile...');
+                window.location.href = '/auth/google';
+            });
+            
+            // Logout
+            $('#logoutBtn').on('click', function() {
+                console.log('🔄 Logging out from profile...');
+                
+                fetch('/auth/logout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showLoginRequired();
+                        
+                        // Update global auth state if available
+                        if (window.refreshAuthStatus) {
+                            window.refreshAuthStatus();
+                        }
+                        
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Signed Out',
+                            text: 'You have been successfully signed out.',
+                            confirmButtonColor: '#6366f1'
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Failed to sign out. Please try again.',
+                            confirmButtonColor: '#6366f1'
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('❌ Error during logout:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Failed to sign out. Please try again.',
+                        confirmButtonColor: '#6366f1'
+                    });
+                });
+            });
+        });
+    } else {
+        setTimeout(initializeProfileWhenReady, 100);
+    }
+}
+
+initializeProfileWhenReady();
+
+// Global functions
+function refreshBookings() {
+    console.log('🔄 Refreshing bookings...');
+    location.reload();
+}
+
+function viewBookingDetails(confirmationCode) {
+    window.location.href = `/appointment-lookup?code=${confirmationCode}`;
+}
+
+function copyConfirmationCode(code) {
+    navigator.clipboard.writeText(code).then(() => {
+        Swal.fire({
+            icon: 'success',
+            title: 'Copied!',
+            text: 'Confirmation code copied to clipboard.',
+            timer: 1500,
+            showConfirmButton: false
+        });
+    }).catch(() => {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Failed to copy confirmation code.',
+            confirmButtonColor: '#6366f1'
+        });
+    });
+}
+
+function filterPastBookings(filter) {
+    // Remove active class from all buttons
+    $('.btn-group button').removeClass('btn-outline-primary').addClass('btn-outline-secondary');
+    
+    // Add active class to clicked button
+    event.target.classList.remove('btn-outline-secondary');
+    event.target.classList.add('btn-outline-primary');
+    
+    const rows = $('#pastBookingsTableBody tr');
+    
+    if (filter === 'all') {
+        rows.show();
+    } else {
+        rows.each(function() {
+            const statusCell = $(this).find('td:nth-child(4)');
+            const status = statusCell.text().toLowerCase();
+            
+            if (status.includes(filter)) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
+    }
+}
+</script>

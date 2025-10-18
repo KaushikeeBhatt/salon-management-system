@@ -1,0 +1,39 @@
+<br>
+<div class="container">
+    <div class="row">
+
+        <div class="col">
+            <h3>Please select staff name</h3>
+            <select name="{{this.id}}" class="custom-select form-control" required>
+                <option value="">Select an Option</option>
+             {{#each data}}
+             <option value="{{this.name}}">{{this.aStaff.dataValues.name}}</option>
+            {{/each}}
+            </select>
+        </div>
+        <div class="col">
+            <h3>Please select service</h3>
+
+            <select name="{{this.id}}" class="custom-select form-control" required>
+                <option value="">Select an Option</option>
+             {{#each allServices}}
+                
+                <option value="{{this.name}}">{{this.name}}</option>
+              
+                 {{/each}}
+            </select>
+
+
+        </div>
+        <div class="col">
+
+        </div>
+    </div>
+    {{this.name}} {{#each allService}} {{this.name}} {{/each}}
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#admin-ul").show();
+        $("#public-ul").hide();
+    });
+</script>

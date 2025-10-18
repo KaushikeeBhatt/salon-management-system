@@ -1,0 +1,201 @@
+<br>
+<div class="container">
+    <div class="card">
+        <!-- Default card contents -->
+        <div class="card-header">
+            <h4 class="card-title">Services</h4>
+        </div>
+        <div class="card-block">
+
+            <!-- Table -->
+            <div style="height: 500px;overflow:auto;">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th><strong>Name</strong></strong>
+                            </th>
+                            <th><strong>Duration</strong></th>
+                            <th><strong>Member Price</strong></th>
+                            <th><strong>Non Member Price</strong></th>
+                            <th><strong>Cost</strong></th>
+                            <th><strong>Details</strong></th>
+                            <th><strong>Edit</strong></th>
+                            <th><strong>Delete</strong></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{!-- show services --}} {{#each services}}
+                        <tr>
+                            <td>{{this.name}}</td>
+                            <td>{{this.duration}} </td>
+                            <td>${{this.member_price}}</td>
+                            <td>${{this.nonmember_price}}</td>
+                            <td>${{this.cost}}</td>
+                            <td>
+                                <i data-bs-toggle="modal" data-bs-target="#serviceModal{{@index}}" class="fa fa-info-circle" style="cursor: pointer;"
+                                    aria-hidden="true"></i>
+                            </td>
+                            {{!-- update --}}
+                            <td>
+                                {{#if this.id}}
+                                <form action="/admin/services/{{this.id}}/edit" method="GET">
+                                    <button type="submit" class="btn btn-info btn-sm"><i class="fas fa-edit" aria-hidden="true"></i> Edit</button>
+                                </form>
+                                {{else}}
+                                <span class="text-muted">No ID</span>
+                                {{/if}}
+                            </td>
+                            {{!-- delete --}}
+                            <td>
+                                {{#if this.id}}
+                                <form action="/admin/services/{{this.id}}?_method=DELETE" method="POST" onsubmit="return confirm('Are you sure you want to delete this service?')">
+                                    <button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i> Delete</button>
+                                </form>
+                                {{else}}
+                                <span class="text-muted">No ID</span>
+                                {{/if}}
+                            </td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- first card body -->
+    </div>
+    <!--first card -->
+    
+    <!-- Service Details Modals -->
+    {{#each services}}
+    <div class="modal fade" id="serviceModal{{@index}}" tabindex="-1" aria-labelledby="serviceModalLabel{{@index}}" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="serviceModalLabel{{@index}}">
+                        <i class="fas fa-cut me-2"></i>Service Details - {{this.name}}
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Name:</strong> {{this.name}}</p>
+                            <p><strong>Duration:</strong> {{#if this.duration}}{{this.duration}} minutes{{else}}N/A{{/if}}</p>
+                            <p><strong>Member Price:</strong> ${{#if this.member_price}}{{this.member_price}}{{else}}0.00{{/if}}</p>
+                            <p><strong>Non Member Price:</strong> ${{#if this.nonmember_price}}{{this.nonmember_price}}{{else}}0.00{{/if}}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Cost:</strong> ${{#if this.cost}}{{this.cost}}{{else}}0.00{{/if}}</p>
+                            <p><strong>Photo URL:</strong> {{#if this.photo}}{{this.photo}}{{else}}<span class="text-muted">No photo URL</span>{{/if}}</p>
+                        </div>
+                    </div>
+                    {{#if this.comment}}
+                    <div class="row">
+                        <div class="col-12">
+                            <p><strong>Comment:</strong></p>
+                            <p class="text-muted">{{this.comment}}</p>
+                        </div>
+                    </div>
+                    {{/if}}
+                    {{#if this.photo}}
+                    <div class="row">
+                        <div class="col-12 text-center">
+                            <p><strong>Service Image:</strong></p>
+                            <img src="{{this.photo}}" alt="{{this.name}}" class="img-fluid" style="max-height: 200px; border-radius: 8px;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                            <div class="text-muted" style="display: none;">Image could not be loaded</div>
+                        </div>
+                    </div>
+                    {{/if}}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{/each}}
+    <br> {{!-- Add new product --}}
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Add Service
+            </h3>
+        </div>
+        <!-- penel-heading -->
+        <div class="card-block">
+            <form class="form-group" action="/admin/services/new" method="POST">
+                <div class="container">
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="service-name">Name</label>
+                                <input type="text" class="form-control" id="service-name" name="name" placeholder="Name" autocomplete="off" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="service-duration">Duration (minutes)</label>
+                                <input type="number" class="form-control" id="service-duration" name="duration" placeholder="Duration" min="1" max="480" autocomplete="off">
+                            </div>
+                            <div class="form-group">
+                                <label for="service-member-price">Member Price ($)</label>
+                                <input type="number" class="form-control" id="service-member-price" name="member_price" placeholder="0.00" step="0.01" min="0" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="service-nonmember-price">Non Member Price ($)</label>
+                                <input type="number" class="form-control" id="service-nonmember-price" name="nonmember_price" placeholder="0.00" step="0.01" min="0" autocomplete="off">
+                            </div>
+                            <div class="form-group">
+                                <label for="service-cost">Cost ($)</label>
+                                <input type="number" class="form-control" id="service-cost" name="cost" placeholder="0.00" step="0.01" min="0" autocomplete="off" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="service-photo">Photo</label>
+                                <input type="url" class="form-control" id="service-photo" name="photo" placeholder="Photo URL" autocomplete="photo">
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="service-comment">Comment</label>
+                                <textarea class="form-control" id="service-comment" name="comment" placeholder="Comment" rows="5" style="height:10em" autocomplete="off"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Service</button>
+                </div>{{!-- container --}}
+            </form>
+        </div>
+        <!-- card-block -->
+    </div>
+    <!-- second card -->
+</div>
+<script type="text/javascript">
+$(document).ready(function() {
+    // Add admin classes to body for CSS targeting
+    document.body.classList.add('admin-user', 'admin-page');
+    
+    // Force admin navigation visibility
+    const adminNav = document.getElementById('admin-ul');
+    const publicNav = document.getElementById('public-ul');
+    
+    if (adminNav) {
+        adminNav.style.display = 'flex';
+        adminNav.style.visibility = 'visible';
+        adminNav.classList.remove('d-none');
+        console.log('✅ Admin nav forced visible');
+    }
+    
+    if (publicNav) {
+        publicNav.style.display = 'none';
+        publicNav.style.visibility = 'hidden';
+        publicNav.classList.add('d-none');
+        console.log('✅ Public nav hidden');
+    }
+    
+    // Debug: Log all service data to check for missing IDs
+    console.log('🔍 Services data check:');
+    $('tbody tr').each(function(index) {
+        const serviceId = $(this).find('form[action*="/edit"]').attr('action');
+        console.log('Service', index + 1, '- Edit URL:', serviceId);
+    });
+});
+</script>

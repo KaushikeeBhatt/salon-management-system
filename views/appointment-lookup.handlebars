@@ -1,0 +1,183 @@
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="text-center mb-5">
+                <h1 class="section-title">Check Your Appointment</h1>
+                <p class="lead">Enter your confirmation code to view your appointment status</p>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-0">
+                        <i class="fas fa-search me-2"></i>Appointment Lookup
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <form id="lookupForm">
+                        <div class="mb-4">
+                            <label for="confirmationCode" class="form-label">Confirmation Code</label>
+                            <input type="text" class="form-control form-control-lg" id="confirmationCode" 
+                                   placeholder="Enter your confirmation code" required>
+                            <div class="form-text">
+                                <i class="fas fa-info-circle me-1"></i>
+                                You received this code when you booked your appointment
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-search me-2"></i>Find Appointment
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Results Section -->
+            <div id="appointmentResult" class="mt-4" style="display: none;">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="mb-0">
+                            <i class="fas fa-calendar-check me-2"></i>Appointment Details
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h5>Customer Information</h5>
+                                <p><strong>Name:</strong> <span id="customerName"></span></p>
+                                <p><strong>Service:</strong> <span id="serviceType"></span></p>
+                                <p><strong>Confirmation Code:</strong> <span id="displayCode"></span></p>
+                            </div>
+                            <div class="col-md-6">
+                                <h5>Appointment Details</h5>
+                                <p><strong>Preferred Date:</strong> <span id="preferredDate"></span></p>
+                                <p><strong>Preferred Time:</strong> <span id="preferredTime"></span></p>
+                                <p><strong>Status:</strong> <span id="appointmentStatus"></span></p>
+                                <p><strong>Booked On:</strong> <span id="bookedDate"></span></p>
+                            </div>
+                        </div>
+                        
+                        <div id="confirmedDateTime" class="mt-3" style="display: none;">
+                            <div class="alert alert-success">
+                                <h5><i class="fas fa-check-circle me-2"></i>Confirmed Appointment</h5>
+                                <p class="mb-0"><strong>Date & Time:</strong> <span id="actualDateTime"></span></p>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <a href="/contactus" class="btn btn-outline-primary">
+                                <i class="fas fa-phone me-2"></i>Contact Us
+                            </a>
+                            <button class="btn btn-secondary ms-2" onclick="window.print()">
+                                <i class="fas fa-print me-2"></i>Print Details
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Error Section -->
+            <div id="errorResult" class="mt-4" style="display: none;">
+                <div class="alert alert-danger">
+                    <h5><i class="fas fa-exclamation-triangle me-2"></i>Appointment Not Found</h5>
+                    <p>We couldn't find an appointment with that confirmation code. Please check the code and try again.</p>
+                    <hr>
+                    <p class="mb-0">
+                        Need help? <a href="/contactus" class="alert-link">Contact us</a> or 
+                        <a href="#" class="alert-link" data-bs-toggle="modal" data-bs-target="#appointmentModal">book a new appointment</a>.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+$(document).ready(function() {
+    $("#iAppointments").addClass("active");
+    $("#admin-ul").hide();
+    $("#public-ul").show();
+    
+    $('#lookupForm').on('submit', function(e) {
+        e.preventDefault();
+        
+        const confirmationCode = $('#confirmationCode').val().trim();
+        if (!confirmationCode) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Missing Code',
+                text: 'Please enter your confirmation code.',
+                confirmButtonColor: '#6366f1'
+            });
+            return;
+        }
+        
+        // Show loading state
+        const submitBtn = $(this).find('button[type="submit"]');
+        const originalText = submitBtn.html();
+        submitBtn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-2"></span>Searching...');
+        
+        // Hide previous results
+        $('#appointmentResult, #errorResult').hide();
+        
+        // Make API call
+        fetch(`/appointment-status/${confirmationCode}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    displayAppointment(data.appointment);
+                } else {
+                    showError();
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showError();
+            })
+            .finally(() => {
+                // Restore button state
+                submitBtn.prop('disabled', false).html(originalText);
+            });
+    });
+    
+    function displayAppointment(appointment) {
+        $('#customerName').text(appointment.name);
+        $('#serviceType').text(appointment.service);
+        $('#displayCode').text(appointment.confirmationCode);
+        $('#preferredDate').text(new Date(appointment.preferredDate).toLocaleDateString());
+        $('#preferredTime').text(appointment.preferredTime || 'Any time');
+        $('#bookedDate').text(new Date(appointment.createdAt).toLocaleDateString());
+        
+        // Status badge
+        const statusBadge = getStatusBadge(appointment.status);
+        $('#appointmentStatus').html(statusBadge);
+        
+        // Show confirmed date/time if available
+        if (appointment.actualDateTime) {
+            $('#actualDateTime').text(new Date(appointment.actualDateTime).toLocaleString());
+            $('#confirmedDateTime').show();
+        } else {
+            $('#confirmedDateTime').hide();
+        }
+        
+        $('#appointmentResult').show();
+        $('#appointmentResult')[0].scrollIntoView({ behavior: 'smooth' });
+    }
+    
+    function getStatusBadge(status) {
+        const badges = {
+            'pending': '<span class="status-badge status-pending">Pending</span>',
+            'confirmed': '<span class="status-badge status-confirmed">Confirmed</span>',
+            'completed': '<span class="status-badge status-completed">Completed</span>',
+            'cancelled': '<span class="status-badge status-cancelled">Cancelled</span>'
+        };
+        return badges[status] || '<span class="status-badge status-pending">Unknown</span>';
+    }
+    
+    function showError() {
+        $('#errorResult').show();
+        $('#errorResult')[0].scrollIntoView({ behavior: 'smooth' });
+    }
+});
+</script>

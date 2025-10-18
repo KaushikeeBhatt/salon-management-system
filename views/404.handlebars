@@ -1,0 +1,97 @@
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8 text-center">
+            <div class="error-container">
+                <div class="error-icon mb-4">
+                    <i class="fas fa-search fa-6x text-muted"></i>
+                </div>
+                <h1 class="error-title display-1 fw-bold text-primary">404</h1>
+                <h2 class="error-subtitle h3 mb-4">Page Not Found</h2>
+                <p class="error-description text-muted mb-4">
+                    Sorry, the page you are looking for doesn't exist or has been moved.
+                </p>
+                <p class="text-muted small mb-4">
+                    <strong>Requested URL:</strong> {{url}}
+                </p>
+                <div class="error-actions">
+                    <a href="/" class="btn btn-primary btn-lg me-3">
+                        <i class="fas fa-home me-2"></i>Go Home
+                    </a>
+                    <button onclick="history.back()" class="btn btn-outline-secondary btn-lg">
+                        <i class="fas fa-arrow-left me-2"></i>Go Back
+                    </button>
+                </div>
+                <div class="mt-5">
+                    <h6 class="text-muted">Need help?</h6>
+                    <div class="d-flex justify-content-center gap-3 mt-3">
+                        <a href="/contactus" class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-envelope me-1"></i>Contact Us
+                        </a>
+                        <a href="/services" class="btn btn-sm btn-outline-info">
+                            <i class="fas fa-spa me-1"></i>Our Services
+                        </a>
+                        <a href="/about" class="btn btn-sm btn-outline-secondary">
+                            <i class="fas fa-info-circle me-1"></i>About Us
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.error-container {
+    padding: 2rem;
+}
+
+.error-title {
+    color: #6366f1;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+}
+
+.error-subtitle {
+    color: #374151;
+    font-weight: 600;
+}
+
+.error-description {
+    font-size: 1.125rem;
+    line-height: 1.6;
+}
+
+.error-icon {
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.error-actions .btn {
+    margin: 0.5rem;
+    min-width: 120px;
+}
+
+@media (max-width: 768px) {
+    .error-title {
+        font-size: 4rem;
+    }
+    
+    .error-actions {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .error-actions .btn {
+        width: 200px;
+        margin: 0.5rem 0;
+    }
+}
+</style>

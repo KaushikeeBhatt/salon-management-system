@@ -1,0 +1,255 @@
+<div class="container py-5">
+    <div class="row">
+        <div class="col-12 text-center mb-5">
+            <h1 class="section-title">Premium Hair Products</h1>
+            <p class="lead">Discover our curated selection of professional-grade hair care products</p>
+        </div>
+    </div>
+    
+    <!-- Search and Filter Section -->
+    <div class="row mb-5">
+        <div class="col-lg-6 mx-auto">
+            <div class="search-box">
+                <div class="input-group">
+                    <input type="text" class="form-control form-control-lg" id="productSearch" placeholder="Search products...">
+                    <button class="btn btn-primary" type="button" id="searchBtn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Product Brands Grid -->
+    <div class="row" id="productBrandsGrid">
+        {{#each productBrands}}
+        <div class="col-lg-4 col-md-6 mb-4 product-brand-item" data-brand="{{brand}}">
+            <div class="product-brand-card" onclick="loadBrandProducts('{{brand}}', {{id}})">
+                <div class="brand-image-container">
+                    <img src="{{#if photo}}{{photo}}{{else}}https://via.placeholder.com/400x300?text={{brand}}{{/if}}" 
+                         alt="{{brand}}" class="brand-image"
+                         onerror="this.src='https://via.placeholder.com/400x300?text={{brand}}';this.onerror=null;">
+                    <div class="brand-overlay">
+                        <div class="brand-info">
+                            <h4 class="brand-name">{{brand}}</h4>
+                            <p class="brand-description">Explore {{brand}} Products</p>
+                            <div class="view-products-btn">
+                                <i class="fas fa-arrow-right"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Enhanced Product Modal -->
+        <div class="modal fade" id="brandModal{{id}}" tabindex="-1" aria-labelledby="brandModalLabel{{id}}" aria-hidden="true">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="brandModalLabel{{id}}">
+                            <i class="fas fa-shopping-bag me-2"></i>{{brand}} Products
+                        </h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" id="modalBody{{id}}">
+                        <div class="text-center py-5">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <p class="mt-3">Loading {{brand}} products...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{/each}}
+    </div>
+    
+    <!-- No Products Message -->
+    {{#unless productBrands}}
+    <div class="row">
+        <div class="col-12 text-center py-5">
+            <div class="no-products-message">
+                <i class="fas fa-shopping-cart fa-4x text-muted mb-4"></i>
+                <h3>No Products Available</h3>
+                <p class="text-muted">We're currently updating our product catalog. Please check back soon!</p>
+                <a href="/contactus" class="btn btn-primary">
+                    <i class="fas fa-phone me-2"></i>Contact Us for Product Information
+                </a>
+            </div>
+        </div>
+    </div>
+    {{/unless}}
+</div>
+
+<script>
+$(document).ready(function() {
+    $("#iProducts").addClass("active");
+    $("#admin-ul").hide();
+    $("#public-ul").show();
+    
+    // Debug: Log brand data
+    console.log('🔍 Brand cards on page:', $('.product-brand-item').length);
+    $('.product-brand-item').each(function(index) {
+        const brand = $(this).data('brand');
+        const imgSrc = $(this).find('.brand-image').attr('src');
+        console.log(`Brand ${index + 1}: ${brand}, Image: ${imgSrc}`);
+    });
+    
+    // Search functionality
+    $('#productSearch').on('input', function() {
+        const searchTerm = $(this).val().toLowerCase();
+        $('.product-brand-item').each(function() {
+            const brandName = $(this).data('brand').toLowerCase();
+            if (brandName.includes(searchTerm)) {
+                $(this).show().addClass('fade-in');
+            } else {
+                $(this).hide();
+            }
+        });
+    });
+    
+    // Add scroll animations
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('fade-in');
+            }
+        });
+    }, { threshold: 0.1 });
+    
+    document.querySelectorAll('.product-brand-item').forEach(item => {
+        observer.observe(item);
+    });
+});
+
+function loadBrandProducts(brand, brandId) {
+    const modalId = `#brandModal${brandId}`;
+    const modalBodyId = `#modalBody${brandId}`;
+    
+    // Show modal
+    const modal = new bootstrap.Modal(document.querySelector(modalId));
+    modal.show();
+    
+    // Reset modal body to loading state
+    $(modalBodyId).html(`
+        <div class="text-center py-5">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-3">Loading ${brand} products...</p>
+        </div>
+    `);
+    
+    // Fetch products
+    jQuery.get(`/products/${brand}`)
+        .done(function(data) {
+            if (data.products && data.products.length > 0) {
+                displayProducts(data.products, modalBodyId, brand);
+            } else {
+                showNoProducts(modalBodyId, brand);
+            }
+        })
+        .fail(function() {
+            showError(modalBodyId, brand);
+        });
+}
+
+function displayProducts(products, modalBodyId, brand) {
+    console.log('🖼️ Displaying products for brand:', brand);
+    console.log('📊 Product data:', products);
+    
+    let productsHtml = `
+        <div class="row">
+            <div class="col-12 mb-4">
+                <div class="brand-header">
+                    <h5>Showing ${products.length} ${brand} products</h5>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+    `;
+    
+    products.forEach((product, index) => {
+        console.log(`🖼️ Product ${index + 1} photo URL:`, product.photo);
+        productsHtml += `
+            <div class="col-lg-6 mb-4">
+                <div class="product-card">
+                    <div class="row g-0">
+                        <div class="col-md-4">
+                            <div class="product-image-container">
+                                <img src="${product.photo || 'https://via.placeholder.com/300x200?text=No+Image'}" 
+                                     alt="${product.name}" class="product-image"
+                                     onerror="this.src='https://via.placeholder.com/300x200?text=No+Image';this.onerror=null;">
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="product-info">
+                                <h5 class="product-name">${product.name}</h5>
+                                <div class="product-price">
+                                    <span class="price">$${parseFloat(product.price).toFixed(2)}</span>
+                                </div>
+                                <p class="product-description">${product.description || 'Professional hair care product for optimal results.'}</p>
+                                <div class="product-actions">
+                                    <button class="btn btn-primary btn-sm" onclick="contactForProduct('${product.name}')">
+                                        <i class="fas fa-info-circle me-1"></i>Learn More
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+    
+    productsHtml += '</div>';
+    $(modalBodyId).html(productsHtml);
+}
+
+function showNoProducts(modalBodyId, brand) {
+    $(modalBodyId).html(`
+        <div class="text-center py-5">
+            <i class="fas fa-box-open fa-4x text-muted mb-4"></i>
+            <h4>No ${brand} Products Available</h4>
+            <p class="text-muted">We're currently updating our ${brand} product selection.</p>
+            <button class="btn btn-primary" onclick="contactForProduct('${brand}')">
+                <i class="fas fa-phone me-2"></i>Contact Us for Availability
+            </button>
+        </div>
+    `);
+}
+
+function showError(modalBodyId, brand) {
+    $(modalBodyId).html(`
+        <div class="text-center py-5">
+            <i class="fas fa-exclamation-triangle fa-4x text-warning mb-4"></i>
+            <h4>Unable to Load Products</h4>
+            <p class="text-muted">There was an error loading ${brand} products. Please try again.</p>
+            <button class="btn btn-primary" onclick="loadBrandProducts('${brand}', ${brandId})">
+                <i class="fas fa-redo me-2"></i>Try Again
+            </button>
+        </div>
+    `);
+}
+
+function contactForProduct(productName) {
+    Swal.fire({
+        title: 'Product Inquiry',
+        html: `
+            <p>Interested in learning more about <strong>${productName}</strong>?</p>
+            <p>Our team would be happy to help you with product information, availability, and recommendations.</p>
+        `,
+        icon: 'info',
+        showCancelButton: true,
+        confirmButtonText: 'Contact Us',
+        cancelButtonText: 'Close',
+        confirmButtonColor: '#6366f1'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = '/contactus';
+        }
+    });
+}
+</script>

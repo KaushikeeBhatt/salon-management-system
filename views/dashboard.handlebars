@@ -1,0 +1,500 @@
+<div class="container py-5">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-5">
+                <div>
+                    <h1 class="section-title mb-2">My Dashboard</h1>
+                    <p class="text-muted">Welcome back! Manage your appointments and profile here.</p>
+                </div>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#appointmentModal">
+                    <i class="fas fa-plus me-2"></i>Book New Appointment
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Stats Cards -->
+    <div class="row mb-5">
+        <div class="col-md-3 mb-4">
+            <div class="dashboard-stat">
+                <h3 id="totalAppointments">0</h3>
+                <p>Total Appointments</p>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="dashboard-stat">
+                <h3 id="pendingAppointments">0</h3>
+                <p>Pending</p>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="dashboard-stat">
+                <h3 id="confirmedAppointments">0</h3>
+                <p>Confirmed</p>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="dashboard-stat">
+                <h3 id="completedAppointments">0</h3>
+                <p>Completed</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- User Profile Section -->
+    <div class="row mb-5">
+        <div class="col-lg-4 mb-4">
+            <div class="dashboard-card">
+                <h4><i class="fas fa-user me-2"></i>Profile Information</h4>
+                <div id="userProfile">
+                    <div class="text-center mb-4">
+                        <div class="user-avatar">
+                            <i class="fas fa-user-circle fa-5x text-primary"></i>
+                        </div>
+                        <h5 class="mt-2" id="userName">Guest User</h5>
+                        <p class="text-muted" id="userEmail">Not logged in</p>
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-outline-primary" id="loginBtn">
+                            <i class="fab fa-google me-2"></i>Sign in with Google
+                        </button>
+                        <button class="btn btn-outline-secondary" id="logoutBtn" style="display: none;">
+                            <i class="fas fa-sign-out-alt me-2"></i>Sign Out
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-8">
+            <div class="dashboard-card">
+                <h4><i class="fas fa-calendar-alt me-2"></i>Booking Management</h4>
+                
+                <!-- Login Required Message -->
+                <div id="loginRequired" class="text-center py-5">
+                    <i class="fas fa-lock fa-3x text-muted mb-3"></i>
+                    <h5>Sign In Required</h5>
+                    <p class="text-muted">Please sign in with Google to access your booking management.</p>
+                    <button class="btn btn-primary" id="loginBtn2">
+                        <i class="fab fa-google me-2"></i>Sign in with Google
+                    </button>
+                </div>
+                
+                <!-- Booking Management for Authenticated Users -->
+                <div id="bookingManagement" style="display: none;">
+                    <div class="text-center py-4">
+                        <i class="fas fa-user-circle fa-4x text-primary mb-3"></i>
+                        <h5>Manage Your Bookings</h5>
+                        <p class="text-muted mb-4">View your current and past appointments, track booking status, and manage your profile.</p>
+                        
+                        <div class="d-grid gap-2 col-6 mx-auto">
+                            <a href="/profile" class="btn btn-primary btn-lg">
+                                <i class="fas fa-user me-2"></i>Go to My Profile
+                            </a>
+                            <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#appointmentModal">
+                                <i class="fas fa-plus me-2"></i>Book New Appointment
+                            </button>
+                        </div>
+                        
+                        <div class="mt-4 pt-3 border-top">
+                            <div class="row text-center">
+                                <div class="col-md-4">
+                                    <i class="fas fa-calendar-check fa-2x text-success mb-2"></i>
+                                    <h6>Current Bookings</h6>
+                                    <p class="small text-muted">View pending and confirmed appointments</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <i class="fas fa-history fa-2x text-info mb-2"></i>
+                                    <h6>Booking History</h6>
+                                    <p class="small text-muted">See all your past appointments</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <i class="fas fa-chart-bar fa-2x text-warning mb-2"></i>
+                                    <h6>Statistics</h6>
+                                    <p class="small text-muted">Track your booking statistics</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Quick Actions -->
+    <div class="row">
+        <div class="col-12">
+            <div class="dashboard-card">
+                <h4><i class="fas fa-bolt me-2"></i>Quick Actions</h4>
+                <div class="row">
+                    <div class="col-md-3 mb-3">
+                        <button class="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#appointmentModal">
+                            <i class="fas fa-calendar-plus d-block mb-2 fa-2x"></i>
+                            Book Appointment
+                        </button>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a href="/appointment-lookup" class="btn btn-outline-secondary w-100">
+                            <i class="fas fa-search d-block mb-2 fa-2x"></i>
+                            Check Status
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a href="/services" class="btn btn-outline-info w-100">
+                            <i class="fas fa-spa d-block mb-2 fa-2x"></i>
+                            View Services
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a href="/profile" class="btn btn-outline-secondary w-100">
+                            <i class="fas fa-user d-block mb-2 fa-2x"></i>
+                            My Profile
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a href="/contactus" class="btn btn-outline-success w-100">
+                            <i class="fas fa-phone d-block mb-2 fa-2x"></i>
+                            Contact Us
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+$(document).ready(function() {
+    $("#iDashboard").addClass("active");
+    $("#admin-ul").hide();
+    $("#public-ul").show();
+    
+    // Check for URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const authStatus = urlParams.get('auth');
+    const errorStatus = urlParams.get('error');
+    const errorDetails = urlParams.get('details');
+    
+    if (authStatus === 'success') {
+        Swal.fire({
+            icon: 'success',
+            title: 'Welcome!',
+            text: 'You have been successfully signed in.',
+            confirmButtonColor: '#6366f1'
+        });
+        // Clean URL
+        window.history.replaceState({}, document.title, window.location.pathname);
+    } else if (errorStatus) {
+        let errorMessage = 'Authentication failed. Please try again.';
+        switch(errorStatus) {
+            case 'auth_failed':
+                errorMessage = 'Google authentication failed. Please try again.';
+                if (errorDetails) {
+                    errorMessage += ` Details: ${decodeURIComponent(errorDetails)}`;
+                }
+                break;
+            case 'no_code':
+                errorMessage = 'No authorization code received from Google.';
+                break;
+            case 'server_error':
+                errorMessage = 'Server error during authentication. Please try again.';
+                if (errorDetails) {
+                    errorMessage += ` Details: ${decodeURIComponent(errorDetails)}`;
+                }
+                break;
+            case 'oauth_init_failed':
+                errorMessage = 'Failed to initialize Google OAuth. Please check your configuration.';
+                break;
+            case 'user_creation_failed':
+                errorMessage = 'Failed to create user account. Please try again.';
+                break;
+            case 'admin_access_denied':
+                errorMessage = 'Admin access denied. You need admin privileges.';
+                break;
+            case 'staff_access_denied':
+                errorMessage = 'Staff access denied. You need staff privileges.';
+                break;
+        }
+        
+        Swal.fire({
+            icon: 'error',
+            title: 'Authentication Error',
+            text: errorMessage,
+            confirmButtonColor: '#6366f1'
+        });
+        // Clean URL
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+    
+    // Initialize dashboard
+    initializeDashboard();
+    
+    function initializeDashboard() {
+        console.log('🔄 Initializing dashboard...');
+        
+        // Check for URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const authStatus = urlParams.get('auth');
+        
+        // If we just came from OAuth, use retry logic to handle session persistence
+        if (authStatus === 'success') {
+            console.log('🔄 Just completed OAuth, checking session with retry logic...');
+            checkAuthWithRetry();
+        } else {
+            // Normal check without retry for regular page loads
+            checkAuthStatus();
+        }
+    }
+    
+    function checkAuthWithRetry(attempt = 1, maxAttempts = 5) {
+        console.log(`🔄 Dashboard auth check attempt ${attempt}/${maxAttempts}...`);
+        
+        fetch('/auth/user', {
+            method: 'GET',
+            credentials: 'same-origin',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => {
+            console.log('🔍 Dashboard auth check response status:', response.status);
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('✅ Dashboard auth check response:', data);
+            
+            if (data.success && data.isAuthenticated && data.user) {
+                console.log('✅ Dashboard session found on attempt', attempt);
+                showUserProfile(data.user);
+                loadUserStats(data.user.id);
+                // Update global auth state if available
+                if (window.refreshAuthStatus) {
+                    window.refreshAuthStatus();
+                }
+            } else {
+                // Session not ready yet, retry if we haven't exceeded max attempts
+                if (attempt < maxAttempts) {
+                    const delay = Math.min(1000 * Math.pow(2, attempt - 1), 5000); // Exponential backoff, max 5s
+                    console.log(`⏳ Dashboard session not ready, retrying in ${delay}ms (attempt ${attempt + 1}/${maxAttempts})`);
+                    console.log('🔍 Dashboard debug info:', data.debug);
+                    
+                    setTimeout(() => {
+                        checkAuthWithRetry(attempt + 1, maxAttempts);
+                    }, delay);
+                } else {
+                    console.log('❌ Dashboard max retry attempts reached, showing login required');
+                    console.log('🔍 Dashboard final debug info:', data.debug);
+                    showLoginRequired();
+                }
+            }
+        })
+        .catch(error => {
+            console.error(`❌ Error on dashboard auth check attempt ${attempt}:`, error);
+            
+            // Retry on error if we haven't exceeded max attempts
+            if (attempt < maxAttempts) {
+                const delay = Math.min(1000 * Math.pow(2, attempt - 1), 5000); // Exponential backoff, max 5s
+                console.log(`⏳ Dashboard retrying due to error in ${delay}ms (attempt ${attempt + 1}/${maxAttempts})`);
+                
+                setTimeout(() => {
+                    checkAuthWithRetry(attempt + 1, maxAttempts);
+                }, delay);
+            } else {
+                console.log('❌ Dashboard max retry attempts reached due to errors, showing login required');
+                showLoginRequired();
+            }
+        });
+    }
+    
+    function checkAuthStatus() {
+        console.log('🔄 Checking auth status (normal check)...');
+        
+        fetch('/auth/user', {
+            method: 'GET',
+            credentials: 'same-origin',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => {
+            console.log('🔍 Auth check response status:', response.status);
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('✅ Dashboard auth check response:', data);
+            
+            if (data.success && data.isAuthenticated && data.user) {
+                showUserProfile(data.user);
+                loadUserStats(data.user.id);
+                // Update global auth state if available
+                if (window.refreshAuthStatus) {
+                    window.refreshAuthStatus();
+                }
+            } else {
+                console.log('⚠️ User not authenticated, showing login required');
+                console.log('🔍 Debug info:', data.debug);
+                showLoginRequired();
+            }
+        })
+        .catch(error => {
+            console.error('❌ Error checking auth status:', error);
+            showLoginRequired();
+        });
+    }
+    
+    function showUserProfile(user) {
+        console.log('✅ Showing user profile for:', user.name);
+
+        // Redirect admin/staff to the admin dashboard
+        if (user.role === 'admin' || user.role === 'staff') {
+            console.log('🚀 Admin/Staff user detected, redirecting to /admin...');
+            window.location.href = '/admin';
+            return; // Prevent rendering the customer dashboard
+        }
+        
+        $('#userName').text(user.name || 'User');
+        $('#userEmail').text(user.email || 'No email');
+        
+        // Update avatar if user has profile picture
+        if (user.picture) {
+            $('.user-avatar').html(`<img src="${user.picture}" alt="${user.name}" class="rounded-circle" style="width: 80px; height: 80px;">`);
+        } else {
+            $('.user-avatar').html('<i class="fas fa-user-circle fa-5x text-primary"></i>');
+        }
+        
+        $('#loginBtn, #loginBtn2').hide();
+        $('#logoutBtn').show();
+        $('#loginRequired').hide();
+        $('#bookingManagement').show();
+    }
+    
+    function showLoginRequired() {
+        console.log('⚠️ Showing login required state');
+        
+        $('#userName').text('Guest User');
+        $('#userEmail').text('Not logged in');
+        $('.user-avatar').html('<i class="fas fa-user-circle fa-5x text-primary"></i>');
+        $('#loginBtn, #loginBtn2').show();
+        $('#logoutBtn').hide();
+        $('#loginRequired').show();
+        $('#bookingManagement').hide();
+        
+        // Reset stats
+        updateStats(0, 0, 0, 0);
+    }
+    
+    function updateStats(total, pending, confirmed, completed) {
+        $('#totalAppointments').text(total);
+        $('#pendingAppointments').text(pending);
+        $('#confirmedAppointments').text(confirmed);
+        $('#completedAppointments').text(completed);
+    }
+    
+    function loadUserStats(userId) {
+        console.log('📊 Loading user stats for user ID:', userId);
+        
+        // Fetch user appointments to calculate stats
+        fetch('/my-appointments', {
+            method: 'GET',
+            credentials: 'same-origin',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success && data.appointments) {
+                console.log('📊 Loaded', data.appointments.length, 'appointments for stats');
+                
+                // Calculate stats
+                const stats = {
+                    total: data.appointments.length,
+                    pending: data.appointments.filter(a => a.status === 'pending').length,
+                    confirmed: data.appointments.filter(a => a.status === 'confirmed' || a.status === 'approved').length,
+                    completed: data.appointments.filter(a => a.status === 'completed').length
+                };
+                
+                console.log('📊 Calculated stats:', stats);
+                updateStats(stats.total, stats.pending, stats.confirmed, stats.completed);
+            } else {
+                console.log('📊 No appointments found, showing zero stats');
+                updateStats(0, 0, 0, 0);
+            }
+        })
+        .catch(error => {
+            console.error('❌ Error loading user stats:', error);
+            updateStats(0, 0, 0, 0);
+        });
+    }
+    
+    // Real Google Sign-In
+    $('#loginBtn, #loginBtn2').on('click', function() {
+        console.log('🔄 Redirecting to Google OAuth from dashboard...');
+        // Redirect to Google OAuth
+        window.location.href = '/auth/google';
+    });
+    
+    // Logout
+    $('#logoutBtn').on('click', function() {
+        console.log('🔄 Logging out from dashboard...');
+        
+        fetch('/auth/logout', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showLoginRequired();
+                
+                // Update global auth state if available
+                if (window.refreshAuthStatus) {
+                    window.refreshAuthStatus();
+                }
+                
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Signed Out',
+                    text: 'You have been successfully signed out.',
+                    confirmButtonColor: '#6366f1'
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Failed to sign out. Please try again.',
+                    confirmButtonColor: '#6366f1'
+                });
+            }
+        })
+        .catch(error => {
+            console.error('❌ Error during logout:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Failed to sign out. Please try again.',
+                confirmButtonColor: '#6366f1'
+            });
+        });
+    });
+});
+
+// Global function to view appointment details
+function viewAppointment(confirmationCode) {
+    window.location.href = `/appointment-lookup?code=${confirmationCode}`;
+}
+</script>

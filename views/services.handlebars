@@ -1,0 +1,68 @@
+<div id="ServicesDiv" class="services-content">
+    <div class="container">
+        <div class="row mb-5">
+            <div class="col-12 text-center">
+                <h1 class="section-title">Our Services</h1>
+                <p class="lead">Discover our premium salon services designed to enhance your natural beauty</p>
+            </div>
+        </div>
+        
+        <div class="row">
+            {{#each services}}
+            <div class="col-lg-6 mb-4">
+                <div class="service-card h-100">
+                    <div class="row g-0 h-100">
+                        <div class="col-md-4 d-flex align-items-center justify-content-center p-3">
+                            <img src="../assets/images/bob3.jpg" alt="{{name}}" class="service-pic">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body h-100 d-flex flex-column">
+                                <h3 class="card-title">{{name}}</h3>
+                                <div class="price-info mb-3">
+                                    <strong>Member Price: ${{member_price}}</strong>
+                                    <strong>Non-Member Price: ${{nonmember_price}}</strong>
+                                </div>
+                                <p class="card-text flex-grow-1">
+                                    {{#if comment}}
+                                        {{comment}}
+                                    {{else}}
+                                        Experience our professional {{name}} service, crafted with precision and care. Our skilled stylists use premium products to ensure you leave feeling confident and beautiful.
+                                    {{/if}}
+                                </p>
+                                <div class="mt-auto">
+                                    <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#appointmentModal">
+                                        <i class="fas fa-calendar-alt me-1"></i> Book This Service
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+        
+        {{#unless services}}
+        <div class="row">
+            <div class="col-12 text-center">
+                <div class="alert alert-info">
+                    <h4>Services Coming Soon!</h4>
+                    <p>We're updating our service offerings. Please contact us for more information about our current services.</p>
+                    <a href="/contactus" class="btn btn-primary">Contact Us</a>
+                </div>
+            </div>
+        </div>
+        {{/unless}}
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $("#iServices").addClass("active");
+        $("#admin-ul").hide();
+        $("#public-ul").show();
+        
+        // Add fade-in animation
+        $('.service-card').addClass('fade-in');
+    });
+</script>

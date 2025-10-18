@@ -1,0 +1,146 @@
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8 text-center">
+            <div class="error-container">
+                <div class="error-icon mb-4">
+                    <i class="fas fa-exclamation-triangle fa-6x text-warning"></i>
+                </div>
+                <h1 class="error-title display-2 fw-bold text-danger">{{status}}</h1>
+                <h2 class="error-subtitle h3 mb-4">
+                    {{#if (eq status 500)}}
+                        Something Went Wrong
+                    {{else if (eq status 403)}}
+                        Access Forbidden
+                    {{else if (eq status 401)}}
+                        Authentication Required
+                    {{else}}
+                        Error Occurred
+                    {{/if}}
+                </h2>
+                <p class="error-description text-muted mb-4">
+                    {{#if message}}
+                        {{message}}
+                    {{else}}
+                        {{#if (eq status 500)}}
+                            We're experiencing technical difficulties. Please try again later.
+                        {{else if (eq status 403)}}
+                            You don't have permission to access this resource.
+                        {{else if (eq status 401)}}
+                            Please sign in to access this page.
+                        {{else}}
+                            An unexpected error occurred while processing your request.
+                        {{/if}}
+                    {{/if}}
+                </p>
+                
+                <div class="error-actions">
+                    {{#if (eq status 401)}}
+                        <a href="/auth/google" class="btn btn-primary btn-lg me-3">
+                            <i class="fab fa-google me-2"></i>Sign In
+                        </a>
+                    {{/if}}
+                    <a href="/" class="btn btn-primary btn-lg me-3">
+                        <i class="fas fa-home me-2"></i>Go Home
+                    </a>
+                    <button onclick="history.back()" class="btn btn-outline-secondary btn-lg">
+                        <i class="fas fa-arrow-left me-2"></i>Go Back
+                    </button>
+                </div>
+                
+                {{#if (eq status 500)}}
+                <div class="mt-4">
+                    <p class="text-muted small">
+                        If the problem persists, please contact our support team.
+                    </p>
+                    <a href="/contactus" class="btn btn-sm btn-outline-primary">
+                        <i class="fas fa-envelope me-1"></i>Contact Support
+                    </a>
+                </div>
+                {{/if}}
+                
+                {{#unless (eq NODE_ENV 'production')}}
+                {{#if error.stack}}
+                <div class="mt-5">
+                    <details class="text-start">
+                        <summary class="btn btn-sm btn-outline-danger mb-3">Show Technical Details</summary>
+                        <div class="alert alert-danger">
+                            <h6>Error Details (Development Mode)</h6>
+                            <pre class="small text-start">{{error.stack}}</pre>
+                        </div>
+                    </details>
+                </div>
+                {{/if}}
+                {{/unless}}
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.error-container {
+    padding: 2rem;
+}
+
+.error-title {
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+}
+
+.error-subtitle {
+    color: #374151;
+    font-weight: 600;
+}
+
+.error-description {
+    font-size: 1.125rem;
+    line-height: 1.6;
+}
+
+.error-icon {
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.05);
+        opacity: 0.8;
+    }
+}
+
+.error-actions .btn {
+    margin: 0.5rem;
+    min-width: 120px;
+}
+
+@media (max-width: 768px) {
+    .error-title {
+        font-size: 3rem;
+    }
+    
+    .error-actions {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .error-actions .btn {
+        width: 200px;
+        margin: 0.5rem 0;
+    }
+}
+
+pre {
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 0.375rem;
+    padding: 1rem;
+    font-size: 0.875rem;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    max-height: 300px;
+    overflow-y: auto;
+}
+</style>
